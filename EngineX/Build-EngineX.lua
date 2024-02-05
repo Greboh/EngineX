@@ -4,6 +4,12 @@ project "EngineX"
    cppdialect "C++20"
    staticruntime "off"
 
+   targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
+   objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
+
+   pchheader "enxpch.h"
+   pchsource "Source/enxpch.h"
+
    files { "Source/**.h", "Source/**.cpp" }
 
    includedirs
@@ -11,9 +17,6 @@ project "EngineX"
         "Source",
         "vendor/spdlog/include"
    }
-
-   targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
 
    filter "system:windows"
        systemversion "latest"

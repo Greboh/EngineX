@@ -8,7 +8,9 @@ namespace EngineX
     {
     public:
         WindowResizeEvent(unsigned int width, unsigned int height)
-            : m_Width(width), m_Height(height) {}
+            : m_Width(width), m_Height(height)
+        {
+        }
 
         unsigned int GetWidth() const { return m_Width; }
         unsigned int GetHeight() const { return m_Height; }
@@ -22,6 +24,7 @@ namespace EngineX
 
         EVENT_CLASS_TYPE(WindowResize)
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
+
     private:
         unsigned int m_Width, m_Height;
     };
@@ -44,7 +47,7 @@ namespace EngineX
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
 
-     class AppUpdateEvent : public Event
+    class AppUpdateEvent : public Event
     {
         AppUpdateEvent() = default;
 
@@ -52,13 +55,11 @@ namespace EngineX
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
 
-     class AppRenderEvent : public Event
+    class AppRenderEvent : public Event
     {
         AppRenderEvent() = default;
 
         EVENT_CLASS_TYPE(AppRender)
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
-
-    
 }

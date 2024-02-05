@@ -14,7 +14,9 @@ namespace EngineX
 
     protected:
         KeyEvent(const KeyCode keycode)
-            : m_KeyCode(keycode) {}
+            : m_KeyCode(keycode)
+        {
+        }
 
         KeyCode m_KeyCode;
     };
@@ -22,7 +24,9 @@ namespace EngineX
     class KeyPressedEvent : public KeyEvent
     {
         KeyPressedEvent(const KeyCode keycode, bool isRepeat = false)
-            : KeyEvent(keycode), m_isRepeat(isRepeat) {}
+            : KeyEvent(keycode), m_isRepeat(isRepeat)
+        {
+        }
 
         bool IsRepeat() const { return m_IsRepeat; }
 
@@ -34,6 +38,7 @@ namespace EngineX
         }
 
         EVENT_CLASS_TYPE(KeyPressed)
+
     private:
         bool m_IsRepeat;
     };
@@ -42,7 +47,9 @@ namespace EngineX
     {
     public:
         KeyReleasedEvent(const KeyCode keycode)
-            : KeyEvent(keycode) {}
+            : KeyEvent(keycode)
+        {
+        }
 
         std::string ToString() const override
         {
@@ -57,7 +64,9 @@ namespace EngineX
     class KeyTypedEvent : public KeyEvent
     {
         KeyTypedEvent(const KeyCode keycode)
-            : KeyEvent(keycode) {}
+            : KeyEvent(keycode)
+        {
+        }
 
         std::string ToString() const override
         {

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 // For use by EngineX Applications only!
-
 #include "EngineX/Core/Base.h"
 #include "EngineX/Core/Application.h"
 

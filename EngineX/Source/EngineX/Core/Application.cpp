@@ -1,6 +1,6 @@
-﻿#include "Application.h"
+﻿#include "enxpch.h"
 
-#include <iostream>
+#include "Application.h"
 
 #include "EngineX/Core/Log.h"
 #include "EngineX/Events/ApplicationEvent.h"
@@ -15,6 +15,8 @@ namespace EngineX
     {
         WindowResizeEvent e(1280, 720);
         ENX_TRACE(e.ToString());
-        while (true) {}
+        while (true)
+        {
+        }
     }
 }

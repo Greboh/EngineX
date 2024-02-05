@@ -62,8 +62,10 @@ namespace EngineX
 
     protected:
         MouseButtonEvent(const MouseCode button)
-            : m_Button(button) {}
-        
+            : m_Button(button)
+        {
+        }
+
         MouseCode m_Button;
     };
 
@@ -71,7 +73,9 @@ namespace EngineX
     {
     public:
         MouseButtonPressedEvent(const MouseCode button)
-            : MouseButtonEvent(button) {}
+            : MouseButtonEvent(button)
+        {
+        }
 
         std::string ToString() const override
         {
@@ -87,7 +91,9 @@ namespace EngineX
     {
     public:
         MouseButtonReleasedEvent(const MouseCode button)
-            : MouseButtonEvent(button) {}
+            : MouseButtonEvent(button)
+        {
+        }
 
         std::string ToString() const override
         {

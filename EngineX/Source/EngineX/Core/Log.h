@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <memory>
-
 #include "Core.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
@@ -13,8 +11,8 @@ namespace EngineX
     public:
         static void Init();
 
-        inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() {return _engineLogger;}
-        inline static std::shared_ptr<spdlog::logger>& GetClientLogger() {return _clientLogger;}
+        static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return _engineLogger; }
+        static std::shared_ptr<spdlog::logger>& GetClientLogger() { return _clientLogger; }
 
     private:
         static std::shared_ptr<spdlog::logger> _engineLogger;

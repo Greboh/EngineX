@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "Core.h"
 
 namespace EngineX
@@ -12,7 +11,7 @@ namespace EngineX
 
         static void Run();
     };
-    
+
     // To be defined in CLIENT
     Application* CreateApplication();
 }

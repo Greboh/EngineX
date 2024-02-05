@@ -1,8 +1,7 @@
 ﻿#pragma once
+#include "enxpch.h"
 
 #include "EngineX/Core/Base.h"
-
-#include <functional>
 
 namespace EngineX
 {
@@ -12,23 +11,34 @@ namespace EngineX
     {
         None = 0,
         // Window Events
-        WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+        WindowClose,
+        WindowResize,
+        WindowFocus,
+        WindowLostFocus,
+        WindowMoved,
         // Application Events
-        AppTick, AppUpdate, AppRender,
+        AppTick,
+        AppUpdate,
+        AppRender,
         // K&B Events
-        KeyPressed, KeyReleased, KeyTyped,
+        KeyPressed,
+        KeyReleased,
+        KeyTyped,
         // Mouse Events
-        MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+        MouseButtonPressed,
+        MouseButtonReleased,
+        MouseMoved,
+        MouseScrolled
     };
 
     enum EventCategory
     {
         None = 0,
-        EventCategoryApplication    = BIT(0),
-        EventCategoryInput          = BIT(1),
-        EventCategoryKeyboard       = BIT(2),
-        EventCategoryMouse          = BIT(3),
-        EventCategoryMouseButton    = BIT(4)
+        EventCategoryApplication = BIT(0),
+        EventCategoryInput = BIT(1),
+        EventCategoryKeyboard = BIT(2),
+        EventCategoryMouse = BIT(3),
+        EventCategoryMouseButton = BIT(4)
     };
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type;}\
@@ -58,12 +68,11 @@ namespace EngineX
     class EventDispatcher
     {
     public:
-
         // F Will be deduced by the compiler!
-        template<typename T, typename F>
+        template <typename T, typename F>
         bool Dispatch(const F& func)
         {
-            if(m_Event.GetEventType() == T::GetStaticType())
+            if (m_Event.GetEventType() == T::GetStaticType())
             {
                 m_Event.Handled |= func(static_cast<T&>(m_Event));
                 return true;
