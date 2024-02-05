@@ -9,7 +9,7 @@ project "EngineX"
    includedirs
    {
         "Source",
-        "%{prj.name}/vendor/spdlog/include"
+        "vendor/spdlog/include"
    }
 
    targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")

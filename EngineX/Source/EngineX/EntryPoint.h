@@ -4,10 +4,15 @@
 
 extern EngineX::Application* EngineX::CreateApplication();
 
-inline int main(int argc, char** arv)
+int main(int argc, char** arv)
     {
-        auto app = EngineX::CreateApplication();
-        
+        EngineX::Log::Init();
+
+        ENX_ENGINE_WARN("Intialized Log!");
+        ENX_INFO("Hello! Var={0}");
+    
+        const auto app = EngineX::CreateApplication();
+    
         // This requests memory allocation on the heap by using the 'new' keyword 
         app->Run();
 

@@ -9,7 +9,7 @@ project "Sandbox"
    includedirs
    {
       "Source",
-      "%{prj.name}/vendor/spdlog/include",
+      "../EngineX/vendor/spdlog/include",
 
 	  -- Include EngineX
 	  "../EngineX/Source"
@@ -29,7 +29,6 @@ project "Sandbox"
        {
            "WINDLL",
            "ENX_PLATFORM_WINDOWS",
-           "ENX_BUILD_DLL"
        }
 
    filter "configurations:Debug"

@@ -1,8 +1,5 @@
 ﻿#include "Application.h"
 
-#include <iostream>
-
-
 namespace EngineX
 {
     Application::Application() = default;
@@ -10,7 +7,9 @@ namespace EngineX
 
     void Application::Run()
     {
-        std::cout << "Run called!\n";
-        std::cin.get();
+        while (true)
+        {
+            
+        }
     }
 }
