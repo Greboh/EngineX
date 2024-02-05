@@ -2,9 +2,9 @@
 
 // For use by EngineX Applications only!
 
-#include "EngineX/Application.h"
-#include "EngineX/Log.h"
+#include "EngineX/Core/Application.h"
+#include "EngineX/Core/Log.h"
 
 // ---------------Entry Point---------------
-#include "EngineX/EntryPoint.h"
+#include "EngineX/Core/EntryPoint.h"
 // ---------------Entry Point---------------

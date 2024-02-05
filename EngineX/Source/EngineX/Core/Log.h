@@ -34,4 +34,3 @@ namespace EngineX
 #define ENX_WARN(...)                  ::EngineX::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define ENX_ERROR(...)                 ::EngineX::Log::GetClientLogger()->error(__VA_ARGS__)
 #define ENX_CRITICAL(...)              ::EngineX::Log::GetClientLogger()->critical(__VA_ARGS__)
-

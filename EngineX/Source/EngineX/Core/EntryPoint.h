@@ -9,7 +9,7 @@ int main(int argc, char** arv)
         EngineX::Log::Init();
 
         ENX_ENGINE_WARN("Intialized Log!");
-        ENX_INFO("Hello! Var={0}");
+        ENX_INFO("Hello!");
     
         const auto app = EngineX::CreateApplication();
     
