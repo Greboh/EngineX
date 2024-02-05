@@ -1,5 +1,11 @@
 ﻿#include "Application.h"
 
+#include <iostream>
+
+#include "EngineX/Core/Log.h"
+#include "EngineX/Events/ApplicationEvent.h"
+
+
 namespace EngineX
 {
     Application::Application() = default;
@@ -7,9 +13,8 @@ namespace EngineX
 
     void Application::Run()
     {
-        while (true)
-        {
-            
-        }
+        WindowResizeEvent e(1280, 720);
+        ENX_TRACE(e.ToString());
+        while (true) {}
     }
 }

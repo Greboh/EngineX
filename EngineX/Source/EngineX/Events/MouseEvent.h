@@ -59,6 +59,43 @@ namespace EngineX
         MouseCode GetMouseButton() const { return m_Button; }
 
         EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton)
+
+    protected:
+        MouseButtonEvent(const MouseCode button)
+            : m_Button(button) {}
         
+        MouseCode m_Button;
+    };
+
+    class MouseButtonPressedEvent : public MouseButtonEvent
+    {
+    public:
+        MouseButtonPressedEvent(const MouseCode button)
+            : MouseButtonEvent(button) {}
+
+        std::string ToString() const override
+        {
+            std::stringstream ss;
+            ss << "MouseButtonPressedEvent: " << m_Button;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(MouseButtonPressed)
+    };
+
+    class MouseButtonReleasedEvent : public MouseButtonEvent
+    {
+    public:
+        MouseButtonReleasedEvent(const MouseCode button)
+            : MouseButtonEvent(button) {}
+
+        std::string ToString() const override
+        {
+            std::stringstream ss;
+            ss << "MouseButtonReleasedEvent: " << m_Button;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(MouseButtonReleased)
     };
 }
