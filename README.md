@@ -1,6 +1,6 @@
 # C++ Game Engine Project
 # Setup steps
-1. In order to clone properly either download full files on github or use the command:
+1. In order to clone properly either download full files on github or use the cmd command:
 ```
 git clone [git-url] --recursive
 ```
