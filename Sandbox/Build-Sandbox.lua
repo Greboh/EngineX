@@ -1,8 +1,7 @@
-project "EngineX-App"
+project "Sandbox"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"
-   targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
    files { "Source/**.h", "Source/**.cpp" }
@@ -10,22 +9,28 @@ project "EngineX-App"
    includedirs
    {
       "Source",
+      "%{prj.name}/vendor/spdlog/include",
 
-	  -- Include Core
-	  "../Core/Source"
+	  -- Include EngineX
+	  "../EngineX/Source"
    }
 
    links
    {
-      "Core"
+      "EngineX"
    }
 
-   targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+   targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
+   objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
 
    filter "system:windows"
        systemversion "latest"
-       defines { "WINDOWS" }
+       defines
+       {
+           "WINDLL",
+           "ENX_PLATFORM_WINDOWS",
+           "ENX_BUILD_DLL"
+       }
 
    filter "configurations:Debug"
        defines { "DEBUG" }

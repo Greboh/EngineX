@@ -1,0 +1,3 @@
+[submodule "EngineX/vendor/spdlog"]
+	path = EngineX/vendor/spdlog
+	url = https://github.com/gabime/spdlog/

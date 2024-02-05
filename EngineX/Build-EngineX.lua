@@ -1,23 +1,32 @@
-project "Core"
-   kind "StaticLib"
+project "EngineX"
+   kind "SharedLib"
    language "C++"
    cppdialect "C++20"
-   targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
    files { "Source/**.h", "Source/**.cpp" }
 
    includedirs
    {
-      "Source"
+        "Source",
+        "%{prj.name}/vendor/spdlog/include"
    }
 
-   targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+   targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
+   objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
 
    filter "system:windows"
        systemversion "latest"
-       defines { }
+        defines
+        {
+            "WINDLL",  
+            "ENX_PLATFORM_WINDOWS",
+            "ENX_BUILD_DLL"
+        }
+        postbuildcommands
+        {
+             ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. OutputDir .. "/Sandbox")
+        }
 
    filter "configurations:Debug"
        defines { "DEBUG" }

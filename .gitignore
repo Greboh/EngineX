@@ -1,7 +1,9 @@
 # Directories
 .vs/
-Binaries/
 .idea/
+bin/
+bin-int/
+
 
 # Files
 *.vcxproj
