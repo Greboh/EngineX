@@ -1,6 +1,6 @@
 # C++ Game Engine Project
 
-## Setup Steps
+# Setup Steps
 
 1. **Cloning the Repository**: To properly clone the repository, you have two options:
     - Download the full files from GitHub.
