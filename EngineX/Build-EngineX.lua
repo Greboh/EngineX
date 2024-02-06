@@ -7,16 +7,26 @@ project "EngineX"
    targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
    objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
 
-   pchheader "enxpch.h"
-   pchsource "Source/enxpch.h"
+ -- Specify the PCH header file
+    pchheader "enxpch.h"
+    
+ -- Specify the source file that includes the PCH header
+    pchsource "Source/enxpch.cpp"
 
    files { "Source/**.h", "Source/**.cpp" }
 
-   includedirs
-   {
-        "Source",
-        "vendor/spdlog/include"
-   }
+    includedirs
+    {
+            "Source",
+            "%{IncludeDir.GLFW}",
+            "%{IncludeDir.spdlog}"
+    }
+
+    links
+    {
+            "GLFW",
+            "opengl32.lib"
+    }
 
    filter "system:windows"
        systemversion "latest"
@@ -32,7 +42,7 @@ project "EngineX"
         }
 
    filter "configurations:Debug"
-       defines { "DEBUG" }
+       defines { "DEBUG", "ENX_ENABLE_ASSERTS" }
        runtime "Debug"
        symbols "On"
 

@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include "EngineX/Core/Base.h"
+#include "EngineX/Core/Application.h"
 
 #ifdef ENX_PLATFORM_WINDOWS
 
@@ -8,12 +10,8 @@ int main(int argc, char** arv)
 {
     EngineX::Log::Init();
 
-    ENX_ENGINE_WARN("Intialized Log!");
-    ENX_INFO("Hello!");
+    auto app = EngineX::CreateApplication();
 
-    const auto app = EngineX::CreateApplication();
-
-    // This requests memory allocation on the heap by using the 'new' keyword 
     app->Run();
 
     // This releases the memory allocation on the heap by using the 'delete' keyword

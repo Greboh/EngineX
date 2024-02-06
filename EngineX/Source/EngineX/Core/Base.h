@@ -26,5 +26,3 @@ namespace Hazel
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 }
-
-#include "EngineX/Core/Log.h"
