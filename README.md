@@ -4,7 +4,6 @@
 
 1. **Cloning the Repository**: To properly clone the repository, you have two options:
     - Download the full files from GitHub.
-      **or**
     - Use the following command in your command-line interface:
         ```
         git clone [git-url] --recursive
