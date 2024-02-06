@@ -11,6 +11,17 @@
 
 2. **Running Setup Script**: Navigate to the `EngineX` directory, then proceed to `Scripts`, and execute the `Setup` script.
 
+# Tool Usages
+
+In this section, I'll outline the tools utilized in this project and the reasons behind their selection.
+
+## Build System Configuration
+
+### Premake
+- **Tool**: [premake](https://github.com/premake/premake-core)
+- **Description**: Premake is utilized as the build configuration tool for this project.
+- **Reason for Usage**: Premake simplifies the process of generating project files for various IDEs and build systems, allowing for easy project setup and configuration. Furthermore it reduces the files needed in the repository such as bin files while having an extremely detailed Wiki
+- **Alternative Considered**: Although [CMake](https://github.com/Kitware/CMake) was evaluated, despite it being the industry standard the general consensus is that it's extremly complicated and therefor i opted for premake.
 
 # Library Usages
 
