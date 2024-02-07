@@ -2,7 +2,7 @@ project "EngineX"
    kind "SharedLib"
    language "C++"
    cppdialect "C++20"
-   staticruntime "on"
+   staticruntime "off"
 
    targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
    objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
