@@ -4,7 +4,7 @@
 #define BIT(x) (1 << x)
 
 // Macro to create a lambda function that binds a member function (fn) to the current object's context
-#define HZ_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+#define ENX_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 namespace Hazel
 {

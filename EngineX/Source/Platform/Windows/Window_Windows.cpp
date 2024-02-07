@@ -1,16 +1,27 @@
 ﻿#include "enxpch.h"
 #include "Window_Windows.h"
 
+#include "EngineX/Events/ApplicationEvent.h"
+#include "EngineX/Events/KeyEvent.h"
+#include "EngineX/Events/MouseEvent.h"
+
 namespace EngineX
 {
-    // Static to make sure glfw is only initialized once per life time!
+    // Static to make sure glfw is only initialized once per engine life time!
     static bool s_GLFWInitialized = false;
-    
+
+    // Callback used to log any errors received from GLFW   
+    // TODO: Look into not having this static perhaps? And possibly move it somewhere else.
+    static void GLFW_ErrorCallback(int error, const char* description)
+    {
+        ENX_ENGINE_ERROR("GLFW Error({0}): {1}", error, description);
+    }
+
     Window* Window::Create(const WindowBaseVars& vars)
     {
         return new Window_Windows(vars);
     }
-    
+
     Window_Windows::Window_Windows(const WindowBaseVars& vars)
     {
         Window_Windows::Init(vars);
@@ -36,6 +47,9 @@ namespace EngineX
             // This does not execute in release versions.
             ENX_ENGINE_ASSERT(success, "Could not initialize GLFW!")
 
+            // Set error callback
+            glfwSetErrorCallback(GLFW_ErrorCallback);
+
             s_GLFWInitialized = true;
         }
 
@@ -49,9 +63,106 @@ namespace EngineX
         );
         glfwMakeContextCurrent(m_Window);
         // Use ampersand to pass the memory address of m_Data to associate it with the GLFW window.
-        // This allows us to store custom data (m_Data) with the GLFW window for later retrieval.
+        // This allows us to store custom data (m_Data) within the GLFW window for later retrieval.
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
+
+        // -------------------------------Setup Event Callbacks for GLFW-------------------------------
+        
+        // Window Resize
+        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+        {
+            // Get the data we stored earlier in the window
+            // First Dereference it to retrieve the pointers value
+            // The pointer is void therefore we cast it to our GLFW_WindowData class
+            // Lastly we tell it where to find the actual data
+            GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
+            data.Width = width;
+            data.Height = height;
+
+            // Make the Event 
+            WindowResizeEvent event(width, height);
+            data.EventCallback(event);
+        });
+
+        // Window Close
+        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
+        {
+            GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
+
+            WindowCloseEvent event;
+            data.EventCallback(event);
+        });
+
+        // Key Input
+        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
+            GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
+
+            switch (action)
+            {
+                case GLFW_PRESS:
+                {
+                        KeyPressedEvent event(key, 0);
+                        data.EventCallback(event);
+                        break;
+                }
+                case GLFW_REPEAT:
+                {
+                        KeyPressedEvent event(key, 1);
+                        data.EventCallback(event);
+                        break;
+                }
+                case GLFW_RELEASE:
+                {
+                        KeyReleasedEvent event(key);
+                        data.EventCallback(event);
+                        break;
+                }
+            }
+        });
+
+        // Mouse-Click Event
+        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+        {
+            GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
+
+            switch (action)
+            {
+                case GLFW_PRESS:
+                {
+                        MouseButtonPressedEvent event(button);
+                        data.EventCallback(event);
+                        break;
+                }
+                case GLFW_RELEASE:
+                {
+                        MouseButtonReleasedEvent event(button);
+                        data.EventCallback(event);
+                        break;
+                }
+            }
+        });
+
+        // Mouse-Scroll Event
+        glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset )
+        {
+            GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
+
+            MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
+            data.EventCallback(event);
+        });
+
+        // Mouse-Movement Event
+        glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
+        {
+            GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
+
+            MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
+            data.EventCallback(event);
+        });
+        
+        // --------------------------------------------------------------------------------------------
     }
 
     void Window_Windows::OnUpdate()

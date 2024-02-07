@@ -37,7 +37,7 @@ namespace EngineX
         GLFWwindow* m_Window;
 
         // Store all data that GLFW might need ..
-        struct WindowData
+        struct GLFW_WindowData
         {
             std::string Name;
             unsigned int Width, Height;
@@ -46,6 +46,6 @@ namespace EngineX
             EventCallBackFn EventCallback;
         };
 
-        WindowData m_Data;
+        GLFW_WindowData m_Data;
     };
 }

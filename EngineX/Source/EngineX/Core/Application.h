@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Core.h"
 #include "Window.h"
+#include "EngineX/Events/ApplicationEvent.h"
 
 namespace EngineX
 {
@@ -12,7 +13,11 @@ namespace EngineX
 
         void Run();
 
+        void OnEvent(Event& e);
+
     private:
+        bool OnWindowClose(WindowCloseEvent& e);
+        
         // Unique because only this class owns it!
         std::unique_ptr<Window> m_Window;
         bool m_Running = true;

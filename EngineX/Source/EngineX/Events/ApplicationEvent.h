@@ -28,8 +28,7 @@ namespace EngineX
     private:
         unsigned int m_Width, m_Height;
     };
-
-
+    
     class WindowCloseEvent : public Event
     {
     public:

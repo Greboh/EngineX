@@ -19,7 +19,8 @@ namespace EngineX
         std::string ToString() const override
         {
             std::stringstream ss;
-            ss << "MouseMovedEvent: " << m_mouseX << ", " << m_MouseY;
+            ss << "MouseMovedEvent: " << m_MouseX << ", " << m_MouseY;
+            return ss.str();
         }
 
         EVENT_CLASS_TYPE(MouseMoved)
@@ -44,6 +45,7 @@ namespace EngineX
         {
             std::stringstream ss;
             ss << "MouseScrolledEvent: " << GetXOffset() << ", " << GetYOffset();
+            return ss.str();
         }
 
         EVENT_CLASS_TYPE(MouseScrolled)

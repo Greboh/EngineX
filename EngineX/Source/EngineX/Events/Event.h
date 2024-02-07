@@ -68,12 +68,24 @@ namespace EngineX
     class EventDispatcher
     {
     public:
+        EventDispatcher(Event& event) : m_Event(event)
+        {
+        }
+
         // F Will be deduced by the compiler!
         template <typename T, typename F>
         bool Dispatch(const F& func)
         {
             if (m_Event.GetEventType() == T::GetStaticType())
             {
+                // Combining Handling Results: After calling the event handler (func),
+                // we update the Handled flag to reflect whether the event was processed.
+                // This flag indicates if any event handler has dealt with the event.
+
+                // Bitwise OR Assignment: The |= operator merges the current Handled flag
+                // with the result of the event handler. This allows multiple handlers to
+                // contribute to the Handled flag. If any handler sets it, the overall result is true..
+
                 m_Event.Handled |= func(static_cast<T&>(m_Event));
                 return true;
             }
@@ -85,7 +97,7 @@ namespace EngineX
         Event& m_Event;
     };
 
-    inline std::ostream& operator<<(std::ostream os, const Event& e)
+    inline std::ostream& operator<<(std::ostream& os, const Event& e)
     {
         return os << e.ToString();
     }
