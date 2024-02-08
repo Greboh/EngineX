@@ -34,9 +34,9 @@ project "EngineX"
        systemversion "latest"
         defines
         {
-            "WINDLL",  
             "ENX_PLATFORM_WINDOWS",
-            "ENX_BUILD_DLL"
+            "ENX_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
         postbuildcommands
         {
