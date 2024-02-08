@@ -1,4 +1,5 @@
-#include "EngineX.h"
+#include <EngineX.h>
+#include <EngineX/Core/EntryPoint.h>
 
 class TestLayer : public EngineX::Layer
 {

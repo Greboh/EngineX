@@ -1,8 +1,11 @@
 ﻿#pragma once
 
 #include "Core.h"
+
+#pragma warning(push, 0)
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
+#pragma warning(pop)
 
 namespace EngineX
 {
@@ -10,13 +13,12 @@ namespace EngineX
     {
     public:
         static void Init();
-
-        static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return _engineLogger; }
-        static std::shared_ptr<spdlog::logger>& GetClientLogger() { return _clientLogger; }
-
+        
+        static Ref<spdlog::logger>& GetEngineLogger() { return s_EngineLogger; }
+        static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
     private:
-        static std::shared_ptr<spdlog::logger> _engineLogger;
-        static std::shared_ptr<spdlog::logger> _clientLogger;
+        static Ref<spdlog::logger> s_EngineLogger;
+        static Ref<spdlog::logger> s_ClientLogger;
     };
 }
 

@@ -1,8 +1,10 @@
 ﻿#pragma once
-#include "Core.h"
+
+#include "Base.h"
 
 #include "Window.h"
 #include "LayerStack.h"
+#include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
 
 namespace EngineX
@@ -24,7 +26,7 @@ namespace EngineX
         bool OnWindowClose(WindowCloseEvent& e);
         
         // Unique because only this class should own the window!
-        std::unique_ptr<Window> m_Window;
+        Scope<Window> m_Window;
         bool m_Running = true;
 
         LayerStack m_Layerstack;

@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include "enxpch.h"
 
-#include "EngineX/Core/Base.h"
-
 namespace EngineX
 {
     // Events are currently blocking. Meaning that it will immediately get dispatched and must be dealt with.  

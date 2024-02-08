@@ -1,4 +1,6 @@
 ﻿#pragma once
+
+#include "Core.h"
 #include "EngineX/Events/Event.h"
 
 namespace EngineX

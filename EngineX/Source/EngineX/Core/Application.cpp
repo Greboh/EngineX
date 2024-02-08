@@ -6,7 +6,7 @@ namespace EngineX
 {
     Application::Application()
     {
-        m_Window = std::unique_ptr<Window>(Window::Create());
+        m_Window = Scope<Window>(Window::Create());
         m_Window->SetEventCallBack(ENX_BIND_EVENT_FN(Application::OnEvent));
     }
     Application::~Application() = default;

@@ -1,6 +1,5 @@
 #pragma once
 
-
 #ifdef ENX_PLATFORM_WINDOWS
 #ifdef ENX_BUILD_DLL
         #define ENGINEX_API __declspec(dllexport)

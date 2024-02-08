@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "EngineX/Core/Base.h"
 #include "EngineX/Core/Log.h"
 
 #ifdef ENX_PLATFORM_WINDOWS
