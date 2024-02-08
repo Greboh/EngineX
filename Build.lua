@@ -19,3 +19,4 @@ group "Sandbox"
 
 group "Dependencies"
       include "EngineX/vendor/GLFW/Build-GLFW.lua"
+      include "EngineX/vendor/glad/Build-glad.lua"

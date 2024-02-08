@@ -19,12 +19,14 @@ project "EngineX"
     {
             "Source",
             "%{IncludeDir.GLFW}",
+            "%{IncludeDir.glad}",
             "%{IncludeDir.spdlog}"
     }
 
     links
     {
             "GLFW",
+            "glad",
             "opengl32.lib"
     }
 
