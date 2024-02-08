@@ -20,6 +20,7 @@ project "EngineX"
             "Source",
             "%{IncludeDir.GLFW}",
             "%{IncludeDir.Glad}",
+            "%{IncludeDir.ImGui}",
             "%{IncludeDir.spdlog}"
     }
 
@@ -27,6 +28,7 @@ project "EngineX"
     {
             "GLFW",
             "Glad",
+            "ImGui",
             "opengl32.lib"
     }
 

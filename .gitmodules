@@ -4,3 +4,6 @@
 [submodule "EngineX/vendor/GLFW"]
 	path = EngineX/vendor/GLFW
 	url = https://github.com/Greboh/GLFW
+[submodule "EngineX/vendor/imgui"]
+	path = EngineX/vendor/imgui
+	url = https://github.com/Greboh/imgui
