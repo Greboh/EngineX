@@ -4,6 +4,7 @@
 #include "EngineX/Events/ApplicationEvent.h"
 #include "EngineX/Events/KeyEvent.h"
 #include "EngineX/Events/MouseEvent.h"
+#include "glad/glad.h"
 
 namespace EngineX
 {
@@ -42,7 +43,7 @@ namespace EngineX
 
         if (!s_GLFWInitialized)
         {
-            int success = glfwInit();
+           const  int success = glfwInit();
 
             // This does not execute in release versions.
             ENX_ENGINE_ASSERT(success, "Could not initialize GLFW!")
@@ -65,6 +66,11 @@ namespace EngineX
         // Use ampersand to pass the memory address of m_Data to associate it with the GLFW window.
         // This allows us to store custom data (m_Data) within the GLFW window for later retrieval.
         glfwSetWindowUserPointer(m_Window, &m_Data);
+        
+        // Initialize glad .. We use reinterpret_cast because we have to cast the pointer to another type
+        const int success = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+        ENX_ENGINE_ASSERT(success, "Could not initialize GLFW!")
+        
         SetVSync(true);
 
         // -------------------------------Setup Event Callbacks for GLFW-------------------------------
