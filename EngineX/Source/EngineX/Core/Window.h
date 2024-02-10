@@ -7,7 +7,6 @@
 
 namespace EngineX
 {
-    
     /**
      * \brief The base information needed to create a window
      */

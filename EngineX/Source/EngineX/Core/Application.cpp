@@ -2,21 +2,27 @@
 
 #include "Application.h"
 
+#include "glad/glad.h"
+
 namespace EngineX
 {
+    Application* Application::s_Instance = nullptr;
+
     Application::Application()
     {
+        ENX_ASSERT(!s_Instance, "Application instance already exists!")
+        s_Instance = this;
+
         m_Window = Scope<Window>(Window::Create());
         m_Window->SetEventCallBack(ENX_BIND_EVENT_FN(Application::OnEvent));
     }
+
     Application::~Application() = default;
 
     void Application::OnEvent(Event& e)
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(ENX_BIND_EVENT_FN(OnWindowClose));
-        
-        ENX_ENGINE_TRACE("{0}", e);
 
         // Handle events from the last index -> first index (See LayerStack.h for information!)
         for (auto iterator = m_Layerstack.end(); iterator != m_Layerstack.begin();)
@@ -25,7 +31,7 @@ namespace EngineX
             (*--iterator)->OnEvent(e);
 
             // If the event gets handled break out of the loop. So we don't chain the event
-            if(e.Handled)
+            if (e.Handled)
             {
                 break;
             }
@@ -36,6 +42,10 @@ namespace EngineX
     {
         while (m_Running)
         {
+            // Clears the Color Buffer .. Kind of like refreshing the screen
+            glClearColor(1, 0, 1, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            
             // NOTE: Currently we are updating our layers first and then our window .. Might change in the future
 
             // Update our layers from first index -> last index
@@ -43,11 +53,11 @@ namespace EngineX
             {
                 layer->OnUpdate();
             }
+
             
             m_Window->OnUpdate();
         }
 
-    
 
         ENX_ENGINE_TRACE("Shutting down ...");
     }
@@ -55,11 +65,13 @@ namespace EngineX
     void Application::InsertLayer(Layer* layer)
     {
         m_Layerstack.InsertLayer(layer);
+        layer->OnAttach();
     }
 
     void Application::InsertOverlay(Layer* layer)
     {
         m_Layerstack.InsertOverlay(layer);
+        layer->OnAttach();
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& e)

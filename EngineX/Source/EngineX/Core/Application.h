@@ -7,6 +7,7 @@
 #include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
 
+
 namespace EngineX
 {
     class ENGINEX_API Application
@@ -22,6 +23,9 @@ namespace EngineX
         void InsertLayer(Layer* layer);
         void InsertOverlay(Layer* layer);
 
+        inline static Application& Get() {return *s_Instance; }
+        inline Window& GetWindow() const { return *m_Window; }
+        
     private:
         bool OnWindowClose(WindowCloseEvent& e);
         
@@ -30,6 +34,8 @@ namespace EngineX
         bool m_Running = true;
 
         LayerStack m_Layerstack;
+
+        static Application* s_Instance;
     };
 
     // To be defined in CLIENT

@@ -64,6 +64,7 @@ namespace EngineX
 
     class KeyTypedEvent : public KeyEvent
     {
+    public:
         KeyTypedEvent(const KeyCode keycode)
             : KeyEvent(keycode)
         {

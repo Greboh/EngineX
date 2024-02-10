@@ -6,6 +6,7 @@
 
 #include "EngineX/Core/Application.h"
 #include "EngineX/Core/Layer.h"
+#include "EngineX/ImGui/ImGuiLayer.h"
 #include "EngineX/Core/Log.h"
 
 #include "EngineX/Core/KeyCodes.h"

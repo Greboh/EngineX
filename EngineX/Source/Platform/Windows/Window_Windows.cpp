@@ -43,7 +43,7 @@ namespace EngineX
 
         if (!s_GLFWInitialized)
         {
-           const  int success = glfwInit();
+            const int success = glfwInit();
 
             // This does not execute in release versions.
             ENX_ENGINE_ASSERT(success, "Could not initialize GLFW!")
@@ -66,15 +66,15 @@ namespace EngineX
         // Use ampersand to pass the memory address of m_Data to associate it with the GLFW window.
         // This allows us to store custom data (m_Data) within the GLFW window for later retrieval.
         glfwSetWindowUserPointer(m_Window, &m_Data);
-        
+
         // Initialize glad .. We use reinterpret_cast because we have to cast the pointer to another type
         const int success = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
         ENX_ENGINE_ASSERT(success, "Could not initialize GLFW!")
-        
+
         SetVSync(true);
 
         // -------------------------------Setup Event Callbacks for GLFW-------------------------------
-        
+
         // Window Resize
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
         {
@@ -101,57 +101,69 @@ namespace EngineX
         });
 
         // Key Input
-        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int keycode, int scancode, int action, int mods)
         {
             GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
 
             switch (action)
             {
-                case GLFW_PRESS:
+            case GLFW_PRESS:
                 {
-                        KeyPressedEvent event(key, 0);
-                        data.EventCallback(event);
-                        break;
+                    KeyPressedEvent event(keycode, 0);
+                    data.EventCallback(event);
+                    break;
                 }
-                case GLFW_REPEAT:
+            case GLFW_REPEAT:
                 {
-                        KeyPressedEvent event(key, 1);
-                        data.EventCallback(event);
-                        break;
+                    KeyPressedEvent event(keycode, 1);
+                    data.EventCallback(event);
+                    break;
                 }
-                case GLFW_RELEASE:
+            case GLFW_RELEASE:
                 {
-                        KeyReleasedEvent event(key);
-                        data.EventCallback(event);
-                        break;
+                    KeyReleasedEvent event(keycode);
+                    data.EventCallback(event);
+                    break;
                 }
             }
         });
 
+        glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
+        {
+            GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
+
+            KeyTypedEvent event(keycode);
+            data.EventCallback(event);
+        });
+
+        // glfwSetCharModsCallback(m_Window, [](GLFWwindow* window, unsigned int keycode, int mods)
+        // {
+        // });
+
         // Mouse-Click Event
-        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int keycode, int action, int mods)
         {
             GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
 
             switch (action)
             {
-                case GLFW_PRESS:
+            case GLFW_PRESS:
                 {
-                        MouseButtonPressedEvent event(button);
-                        data.EventCallback(event);
-                        break;
+                    MouseButtonPressedEvent event(keycode);
+                    data.EventCallback(event);
+                    break;
                 }
-                case GLFW_RELEASE:
+            case GLFW_RELEASE:
                 {
-                        MouseButtonReleasedEvent event(button);
-                        data.EventCallback(event);
-                        break;
+                    MouseButtonReleasedEvent event(keycode);
+                    data.EventCallback(event);
+                    break;
                 }
             }
         });
 
         // Mouse-Scroll Event
-        glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset )
+        glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
         {
             GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
 
@@ -167,7 +179,7 @@ namespace EngineX
             MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
             data.EventCallback(event);
         });
-        
+
         // --------------------------------------------------------------------------------------------
     }
 

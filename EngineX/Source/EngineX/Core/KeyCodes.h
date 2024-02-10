@@ -156,11 +156,11 @@ namespace EngineX
             LeftShift = 340,
             LeftControl = 341,
             LeftAlt = 342,
-            LeftSuper = 343,
+            LeftOS = 343,
             RightShift = 344,
             RightControl = 345,
             RightAlt = 346,
-            RightSuper = 347,
+            RightOS = 347,
             Menu = 348
         };
     }
