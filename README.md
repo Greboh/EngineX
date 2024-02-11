@@ -6,7 +6,7 @@
     - Download the full files from GitHub.
     - Use the following command in your command-line interface:
         ```
-        git clone [git-url] --recursive
+        git clone --recursive [git-url] 
         ```
 
 2. **Running Setup Script**: Navigate to the `EngineX` directory, then proceed to `Scripts`, and execute the `Setup` script.
