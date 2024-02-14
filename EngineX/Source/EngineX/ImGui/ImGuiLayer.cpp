@@ -49,8 +49,10 @@ namespace EngineX
         // Set window size for ImGui
         const Application& app = Application::Get();
         const Window& window = app.GetWindow();
-        io.DisplaySize = ImVec2(static_cast<float>(window.GetWidth()), static_cast<float>(window.GetHeight()));
 
+        const auto[x, y] = ENX_GET_SCREENSIZE(window);
+        io.DisplaySize = ImVec2(static_cast<float>(x), static_cast<float>(y));
+        
         // Set Delta time for ImGui
         const auto time = static_cast<float>(glfwGetTime());
         io.DeltaTime = m_DeltaTime > 0.0f ? time - m_DeltaTime : 1.0f / 60.0f;

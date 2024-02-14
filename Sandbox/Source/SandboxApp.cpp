@@ -11,12 +11,15 @@ public:
 
     void OnUpdate() override
     {
-        // ENX_INFO("{0}::OnUpdate", m_DebugName);
+        if(EngineX::InputManager::IsKeyPressed(EngineX::Key::Tab))
+        {
+            ENX_INFO("The tab key is pressed (poll)!");
+        }
     }
     
     void OnEvent(EngineX::Event& e) override
     {
-        ENX_TRACE("{0}:({1})",m_DebugName, e);
+        
     }
 };
 

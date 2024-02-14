@@ -136,12 +136,8 @@ namespace EngineX
             data.EventCallback(event);
         });
 
-        // glfwSetCharModsCallback(m_Window, [](GLFWwindow* window, unsigned int keycode, int mods)
-        // {
-        // });
-
         // Mouse-Click Event
-        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int keycode, int action, int mods)
+        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
         {
             GLFW_WindowData& data = *static_cast<GLFW_WindowData*>(glfwGetWindowUserPointer(window));
 
@@ -149,13 +145,13 @@ namespace EngineX
             {
             case GLFW_PRESS:
                 {
-                    MouseButtonPressedEvent event(keycode);
+                    MouseButtonPressedEvent event(button);
                     data.EventCallback(event);
                     break;
                 }
             case GLFW_RELEASE:
                 {
-                    MouseButtonReleasedEvent event(keycode);
+                    MouseButtonReleasedEvent event(button);
                     data.EventCallback(event);
                     break;
                 }

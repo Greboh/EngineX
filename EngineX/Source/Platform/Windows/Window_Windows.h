@@ -12,6 +12,8 @@ namespace EngineX
         Window_Windows(const WindowBaseVars& vars);
         virtual ~Window_Windows() override;
 
+        inline virtual void* GetBaseWindow() const override { return m_Window; }
+        
         void OnUpdate() override;
 
         inline unsigned GetWidth() const override { return m_Data.Width; }
@@ -36,6 +38,7 @@ namespace EngineX
 
         GLFWwindow* m_Window;
 
+    private:
         // Store all data that GLFW might need ..
         struct GLFW_WindowData
         {

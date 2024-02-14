@@ -2,6 +2,7 @@
 
 #include "Application.h"
 
+#include "InputManager.h"
 #include "glad/glad.h"
 
 namespace EngineX
@@ -43,7 +44,7 @@ namespace EngineX
         while (m_Running)
         {
             // Clears the Color Buffer .. Kind of like refreshing the screen
-            glClearColor(1, 0, 1, 1);
+            glClearColor(.5f, 1, .5f, 1);
             glClear(GL_COLOR_BUFFER_BIT);
             
             // NOTE: Currently we are updating our layers first and then our window .. Might change in the future
@@ -53,7 +54,6 @@ namespace EngineX
             {
                 layer->OnUpdate();
             }
-
             
             m_Window->OnUpdate();
         }

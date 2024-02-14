@@ -9,6 +9,7 @@
 #include "EngineX/ImGui/ImGuiLayer.h"
 #include "EngineX/Core/Log.h"
 
+#include "EngineX/Core/InputManager.h"
 #include "EngineX/Core/KeyCodes.h"
 #include "EngineX/Core/MouseCodes.h"
 

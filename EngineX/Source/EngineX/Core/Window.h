@@ -7,6 +7,9 @@
 
 namespace EngineX
 {
+
+#define ENX_GET_SCREENSIZE(window) std::pair<unsigned int, unsigned int>(window.GetWidth(), window.GetHeight())
+    
     /**
      * \brief The base information needed to create a window
      */
@@ -41,6 +44,13 @@ namespace EngineX
         virtual void SetEventCallBack(const EventCallBackFn& callback) = 0;
         virtual void SetVSync(bool enabled) = 0;
         virtual bool IsVSync() const = 0;
+
+        /**
+         * \brief Returns the base window. This is useful to no matter what lib is used, we can always get the base window.
+         * \return Returns a void pointer because for now it's a GLFW_Window however, down the line it might be something different.
+         * It could even depend on the platform
+         */
+        virtual void* GetBaseWindow() const = 0;
 
         static Window* Create(const WindowBaseVars & props = WindowBaseVars());
     };

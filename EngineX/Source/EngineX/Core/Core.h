@@ -1,11 +1,11 @@
 #pragma once
 
 #ifdef ENX_PLATFORM_WINDOWS
-#ifdef ENX_BUILD_DLL
+        #ifdef ENX_BUILD_DLL
         #define ENGINEX_API __declspec(dllexport)
-#else
+        #else
         #define ENGINEX_API __declspec(dllimport)
-#endif
+        #endif
 #else
         #error EngineX only supports Windows!
 #endif
