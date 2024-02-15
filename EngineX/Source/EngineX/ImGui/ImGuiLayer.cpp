@@ -50,13 +50,13 @@ namespace EngineX
         ImGui_ImplOpenGL3_Init("#version 410");
 
         // First, create a shared pointer to an instance of ImGuiConsole using make_shared
-        m_MyImGuiConsole = std::make_shared<ImGuiConsole>();
-
-        // Then, create an instance of ImGuiConsoleSink using the shared pointer to myImGuiConsole
-        auto const sinkInstance = std::make_shared<ImGuiConsoleSink>(m_MyImGuiConsole);
-        sinkInstance->set_pattern("%^[%T] %n: %v%$");
-
-        spdlog::get("Application")->sinks().push_back(sinkInstance);
+        // m_MyImGuiConsole = std::make_shared<ImGuiConsole>();
+        //
+        // // Then, create an instance of ImGuiConsoleSink using the shared pointer to myImGuiConsole
+        // auto const sinkInstance = std::make_shared<ImGuiConsoleSink>(m_MyImGuiConsole);
+        // sinkInstance->set_pattern("%^[%T] %n: %v%$");
+        //
+        // spdlog::get("Application")->sinks().push_back(sinkInstance);
     }
 
     void ImGuiLayer::OnDetach()
@@ -68,10 +68,10 @@ namespace EngineX
 
     void ImGuiLayer::OnImGuiRender()
     {
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
-
-        m_MyImGuiConsole->Draw("Console");
+        // static bool show = true;
+        // ImGui::ShowDemoWindow(&show);
+        //
+        // m_MyImGuiConsole->Draw("Console");
     }
 
     void ImGuiLayer::Begin()
