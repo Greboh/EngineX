@@ -15,7 +15,10 @@ public:
     {
         if(EngineX::InputManager::IsKeyPressed(EngineX::Key::Tab))
         {
+            ENX_TRACE("The tab key is pressed (poll)!");
             ENX_INFO("The tab key is pressed (poll)!");
+            ENX_WARN("The tab key is pressed (poll)!");
+            ENX_ERROR("The tab key is pressed (poll)!");
             ENX_ENGINE_INFO("The tab key is pressed (poll)!");
         }
     }

@@ -4,6 +4,8 @@
 
 namespace EngineX
 {
+    struct ImGuiConsole;
+
     class ImGuiLayer : public Layer
     {
     public:
@@ -18,5 +20,6 @@ namespace EngineX
 
     private:
         float m_DeltaTime;
+        std::shared_ptr<ImGuiConsole> m_MyImGuiConsole;
     };
 }
