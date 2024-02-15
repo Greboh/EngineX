@@ -5,8 +5,6 @@ namespace EngineX
 {
     LayerStack::LayerStack()
     {
-        // Start it at the beginning of the vector.
-        m_LayerInsert = m_Layers.begin();
     }
 
     LayerStack::~LayerStack()
@@ -21,7 +19,8 @@ namespace EngineX
     void LayerStack::InsertLayer(Layer* layer)
     {
         // Insert layer at the position based on m_LayerInsert (begin | end)
-        m_LayerInsert = m_Layers.emplace(m_LayerInsert, layer);
+         m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
+        m_LayerInsertIndex++;
     }
 
     void LayerStack::RemoveLayer(Layer* layer)
@@ -32,7 +31,7 @@ namespace EngineX
             ; iteration != m_Layers.end())
         {
             m_Layers.erase(iteration);
-            --m_LayerInsert;
+            m_LayerInsertIndex--;
         }
     }
 

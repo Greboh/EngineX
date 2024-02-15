@@ -1,6 +1,8 @@
 #include <EngineX.h>
 #include <EngineX/Core/EntryPoint.h>
 
+#include "imgui/imgui.h"
+
 class TestLayer : public EngineX::Layer
 {
 public:
@@ -14,9 +16,17 @@ public:
         if(EngineX::InputManager::IsKeyPressed(EngineX::Key::Tab))
         {
             ENX_INFO("The tab key is pressed (poll)!");
+            ENX_ENGINE_INFO("The tab key is pressed (poll)!");
         }
     }
-    
+
+    void OnImGuiRender() override
+    {
+        ImGui::Begin("Viewport");
+        ImGui::Text("Hello Viewport!");
+        ImGui::End();
+    }
+
     void OnEvent(EngineX::Event& e) override
     {
         
@@ -29,7 +39,6 @@ public:
     Sandbox()
     {
         InsertLayer(new TestLayer());
-        InsertOverlay(new EngineX::ImGuiLayer());
     }
 
     ~Sandbox() override = default;

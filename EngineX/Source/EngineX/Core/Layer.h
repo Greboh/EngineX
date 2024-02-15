@@ -5,7 +5,7 @@
 
 namespace EngineX
 {
-    class ENGINEX_API Layer
+    class Layer
     {
     public:
         // Default layer name .. Names are primarly for debugging purpose 
@@ -23,6 +23,7 @@ namespace EngineX
         virtual void OnDetach() {}
         virtual void OnUpdate() {}
         virtual void OnEvent(Event& e) {}
+        virtual void OnImGuiRender() {}
 
         inline const std::string& GetName() const {return m_DebugName; }
 

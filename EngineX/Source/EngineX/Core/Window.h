@@ -28,7 +28,7 @@ namespace EngineX
         {}
     };
     
-    class ENGINEX_API Window
+    class Window
     {
     public:
         // Creates a type alias for a function pointer that takes Event& as a parameter

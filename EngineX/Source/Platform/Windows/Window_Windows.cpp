@@ -39,7 +39,7 @@ namespace EngineX
         m_Data.Width = vars.Width;
         m_Data.Height = vars.Height;
 
-        ENX_ENGINE_INFO("Creating window > Name: {0} W{1} : H{2}", vars.Name, vars.Width, vars.Height);
+        // ENX_ENGINE_INFO("Creating window > Name: {0} W{1} : H{2}", vars.Name, vars.Width, vars.Height);
 
         if (!s_GLFWInitialized)
         {
