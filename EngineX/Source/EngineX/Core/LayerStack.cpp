@@ -12,6 +12,7 @@ namespace EngineX
         // Remove all layers
         for (Layer* layer : m_Layers)
         {
+            layer->OnDetach();
             delete layer;
         }
     }
@@ -30,6 +31,7 @@ namespace EngineX
         if( const auto iteration= std::ranges::find(m_Layers, layer)
             ; iteration != m_Layers.end())
         {
+            layer->OnDetach();
             m_Layers.erase(iteration);
             m_LayerInsertIndex--;
         }
@@ -46,6 +48,7 @@ namespace EngineX
         if( const auto iteration= std::ranges::find(m_Layers, overlay)
            ; iteration != m_Layers.end())
         {
+            overlay->OnDetach();
             m_Layers.erase(iteration);
         }
     }

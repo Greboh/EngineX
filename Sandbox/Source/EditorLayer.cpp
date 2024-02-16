@@ -29,20 +29,20 @@ void EditorLayer::OnUpdate()
     }
 }
 
-
 void EditorLayer::OnImGuiRender()
 {
-    ImGui::Begin("Viewport");
-    ImGui::Text("Hello Viewport!");
+    // Enable docking
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    
+    static bool showConsole = true;
+    m_ImGuiConsole->Draw("Console", &showConsole);
     
     static bool showDemo = true;
     ImGui::ShowDemoWindow(&showDemo);
-    
-    m_ImGuiConsole->Draw("Console");
-    ImGui::End();
 }
 
 void EditorLayer::OnEvent(EngineX::Event& e)
 {
         
-}    
+}
+

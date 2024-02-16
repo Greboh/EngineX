@@ -47,7 +47,7 @@ namespace EngineX
         while (m_Running)
         {
             // Clears the Color Buffer .. Kind of like refreshing the screen
-            glClearColor(.5f, 1, .5f, 1);
+            glClearColor(0.1f, 0.1, 0.1, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
             
             // NOTE: Currently we are updating our layers first and then our window .. Might change in the future

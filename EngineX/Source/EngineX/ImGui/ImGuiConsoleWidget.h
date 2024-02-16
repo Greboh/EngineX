@@ -25,7 +25,7 @@ namespace EngineX
 
         void AddLog(const char* fmt, ...);
 
-        void Draw(const char* title, bool* p_open = NULL);
+        void Draw(const char* title, bool* p_open, ImGuiWindowFlags flags = ImGuiWindowFlags_None);
 
         static spdlog::level::level_enum GetLogLevel(const std::string& message)
         {

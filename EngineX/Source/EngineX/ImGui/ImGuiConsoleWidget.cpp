@@ -25,9 +25,10 @@ namespace EngineX
                 LineOffsets.push_back(old_size + 1);
     }
 
-    void ImGuiConsole::Draw(const char* title, bool* p_open)
+    void ImGuiConsole::Draw(const char* title, bool* p_open, ImGuiWindowFlags flags)
     {
-        if (!ImGui::Begin(title, p_open))
+        
+        if (!ImGui::Begin(title, p_open, flags))
         {
             ImGui::End();
             return;

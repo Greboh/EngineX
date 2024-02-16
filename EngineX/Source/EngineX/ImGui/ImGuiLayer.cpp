@@ -34,7 +34,6 @@ namespace EngineX
 
         // Tweak WindowRounding/WindowBackground when viewports are enabled
         // so platform windows can look identical to regular ones
-
         ImGuiStyle& style = ImGui::GetStyle();
         if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
@@ -44,19 +43,10 @@ namespace EngineX
 
         Application& app = Application::Get();
         GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetBaseWindow());
-
+        
         // Setup Platform / Renderer bindings
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 410");
-
-        // First, create a shared pointer to an instance of ImGuiConsole using make_shared
-        // m_MyImGuiConsole = std::make_shared<ImGuiConsole>();
-        //
-        // // Then, create an instance of ImGuiConsoleSink using the shared pointer to myImGuiConsole
-        // auto const sinkInstance = std::make_shared<ImGuiConsoleSink>(m_MyImGuiConsole);
-        // sinkInstance->set_pattern("%^[%T] %n: %v%$");
-        //
-        // spdlog::get("Application")->sinks().push_back(sinkInstance);
     }
 
     void ImGuiLayer::OnDetach()
@@ -68,10 +58,7 @@ namespace EngineX
 
     void ImGuiLayer::OnImGuiRender()
     {
-        // static bool show = true;
-        // ImGui::ShowDemoWindow(&show);
-        //
-        // m_MyImGuiConsole->Draw("Console");
+        
     }
 
     void ImGuiLayer::Begin()

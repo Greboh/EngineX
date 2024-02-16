@@ -24,6 +24,11 @@ project "EngineX"
             "%{IncludeDir.spdlog}"
     }
 
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+
     links
     {
             "GLFW",
