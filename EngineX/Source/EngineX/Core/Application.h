@@ -7,6 +7,7 @@
 #include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
 #include "EngineX/ImGui/ImGuiLayer.h"
+
 namespace EngineX
 {
     class Application
@@ -28,14 +29,16 @@ namespace EngineX
     private:
         bool OnWindowClose(WindowCloseEvent& e);
         
+        static Application* s_Instance;
+        
         // Unique because only this class should own the window!
         Scope<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
 
         LayerStack m_Layerstack;
-
-        static Application* s_Instance;
+        
+        unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
     };
 
     // To be defined in CLIENT

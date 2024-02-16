@@ -7,7 +7,7 @@ namespace EngineX
     class ImGuiConsoleSink : public spdlog::sinks::sink
     {
     public:
-        explicit ImGuiConsoleSink(const std::shared_ptr<ImGuiConsole>& console) : m_Console(console)
+        explicit ImGuiConsoleSink(const Ref<ImGuiConsole>& console) : m_Console(console)
         {
             const int success = m_Console != nullptr;
             ENX_ENGINE_ASSERT(success, "ImGuiConsole is null!")
@@ -47,7 +47,7 @@ namespace EngineX
 
         void set_pattern(const std::string& pattern) override {}
 
-        void set_formatter(std::unique_ptr<spdlog::formatter> sink_formatter) override{}
+        void set_formatter(Scope<spdlog::formatter> sink_formatter) override{}
 
     private:
         Ref<ImGuiConsole> m_Console;

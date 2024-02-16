@@ -2,7 +2,6 @@
 #include "ImGuiLayer.h"
 
 #include "imgui.h"
-#include "ImGuiConsoleSink.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "EngineX/Core/Application.h"

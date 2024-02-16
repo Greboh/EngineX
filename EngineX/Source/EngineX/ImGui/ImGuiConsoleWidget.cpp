@@ -8,21 +8,21 @@ namespace EngineX
 {
     void ImGuiConsole::Clear()
     {
-        Buf.clear();
-        LineOffsets.clear();
-        LineOffsets.push_back(0);
+        m_TextBuffer.clear();
+        m_LineOffsets.clear();
+        m_LineOffsets.push_back(0);
     }
 
     void ImGuiConsole::AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
-        int old_size = Buf.size();
+        int old_size = m_TextBuffer.size();
         va_list args;
         va_start(args, fmt);
-        Buf.appendfv(fmt, args);
+        m_TextBuffer.appendfv(fmt, args);
         va_end(args);
-        for (int new_size = Buf.size(); old_size < new_size; old_size++)
-            if (Buf[old_size] == '\n')
-                LineOffsets.push_back(old_size + 1);
+        for (int new_size = m_TextBuffer.size(); old_size < new_size; old_size++)
+            if (m_TextBuffer[old_size] == '\n')
+                m_LineOffsets.push_back(old_size + 1);
     }
 
     void ImGuiConsole::Draw(const char* title, bool* p_open, ImGuiWindowFlags flags)
@@ -37,7 +37,7 @@ namespace EngineX
         // Options menu
         if (ImGui::BeginPopup("Options"))
         {
-            ImGui::Checkbox("Auto-scroll", &AutoScroll);
+            ImGui::Checkbox("Auto-scroll", &m_AutoScroll);
             ImGui::EndPopup();
         }
 
@@ -49,7 +49,7 @@ namespace EngineX
         ImGui::SameLine();
         bool copy = ImGui::Button("Copy");
         ImGui::SameLine();
-        Filter.Draw("Filter", -100.0f);
+        m_TextFilter.Draw("Filter", -100.0f);
 
         ImGui::Separator();
 
@@ -62,25 +62,25 @@ namespace EngineX
 
             // Increase the font scale to make the text bigger
             const float oldFontSize = ImGui::GetFont()->Scale;
-            ImGui::GetFont()->Scale *= 1.25f;
+            ImGui::GetFont()->Scale *= 1.0f;
             ImGui::PushFont(ImGui::GetFont());
                 
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 5));
-            const char* buf = Buf.begin();
-            const char* buf_end = Buf.end();
-            if (Filter.IsActive())
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 7.5));
+            const char* buf = m_TextBuffer.begin();
+            const char* buf_end = m_TextBuffer.end();
+            if (m_TextFilter.IsActive())
             {
                 // In this example we don't use the clipper when Filter is enabled.
                 // This is because we don't have random access to the result of our filter.
                 // A real application processing logs with ten of thousands of entries may want to store the result of
                 // search/filter.. especially if the filtering function is not trivial (e.g. reg-exp).
-                for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
+                for (int line_no = 0; line_no < m_LineOffsets.Size; line_no++)
                 {
-                    const char* line_start = buf + LineOffsets[line_no];
-                    const char* line_end = (line_no + 1 < LineOffsets.Size)
-                                               ? (buf + LineOffsets[line_no + 1] - 1)
+                    const char* line_start = buf + m_LineOffsets[line_no];
+                    const char* line_end = (line_no + 1 < m_LineOffsets.Size)
+                                               ? (buf + m_LineOffsets[line_no + 1] - 1)
                                                : buf_end;
-                    if (Filter.PassFilter(line_start, line_end))
+                    if (m_TextFilter.PassFilter(line_start, line_end))
                     {
                         // Get the log level from the message string
                         spdlog::level::level_enum level = GetLogLevel(std::string(line_start, line_end));
@@ -121,17 +121,14 @@ namespace EngineX
                 // anymore, which is why we don't use the clipper. Storing or skimming through the search result would make
                 // it possible (and would be recommended if you want to search through tens of thousands of entries).
                 ImGuiListClipper clipper;
-                clipper.Begin(LineOffsets.Size);
+                clipper.Begin(m_LineOffsets.Size);
                 while (clipper.Step())
                 {
                     for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
                     {
-                        // Draw a line under the text
-                        ImGui::Separator();
-                            
-                        const char* line_start = buf + LineOffsets[line_no];
-                        const char* line_end = (line_no + 1 < LineOffsets.Size)
-                                                   ? (buf + LineOffsets[line_no + 1] - 1)
+                        const char* line_start = buf + m_LineOffsets[line_no];
+                        const char* line_end = (line_no + 1 < m_LineOffsets.Size)
+                                                   ? (buf + m_LineOffsets[line_no + 1] - 1)
                                                    : buf_end;
 
                         // Get the log level from the message string
@@ -165,14 +162,12 @@ namespace EngineX
 
             // Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
             // Using a scrollbar or mouse-wheel will take away from the bottom edge.
-            if (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+            if (m_AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
             ImGui::SetScrollHereY(1.0f);
                 
             // Restore the default font scale
             ImGui::GetFont()->Scale = oldFontSize;
             ImGui::PopFont();
-
-              
         }
         ImGui::EndChild();
         ImGui::End();

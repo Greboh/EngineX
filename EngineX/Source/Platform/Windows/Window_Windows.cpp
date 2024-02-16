@@ -1,10 +1,12 @@
 ﻿#include "enxpch.h"
 #include "Window_Windows.h"
 
+#include "EngineX/Core/Core.h"
 #include "EngineX/Events/ApplicationEvent.h"
 #include "EngineX/Events/KeyEvent.h"
 #include "EngineX/Events/MouseEvent.h"
-#include "glad/glad.h"
+
+#include "Platform/OpenGL/OpenGLRenderingContext.h"
 
 namespace EngineX
 {
@@ -38,9 +40,7 @@ namespace EngineX
         m_Data.Name = vars.Name;
         m_Data.Width = vars.Width;
         m_Data.Height = vars.Height;
-
-        // ENX_ENGINE_INFO("Creating window > Name: {0} W{1} : H{2}", vars.Name, vars.Width, vars.Height);
-
+        
         if (!s_GLFWInitialized)
         {
             const int success = glfwInit();
@@ -62,15 +62,15 @@ namespace EngineX
             nullptr,
             nullptr
         );
-        glfwMakeContextCurrent(m_Window);
+
+        // TODO: This should probably be defined by some property. Since the idea is to support multiple graphics APIS
+        m_RenderingContext = new OpenGLRenderingContext(m_Window);
+        
+        m_RenderingContext->Init();
+        
         // Use ampersand to pass the memory address of m_Data to associate it with the GLFW window.
         // This allows us to store custom data (m_Data) within the GLFW window for later retrieval.
         glfwSetWindowUserPointer(m_Window, &m_Data);
-
-        // Initialize glad .. We use reinterpret_cast because we have to cast the pointer to another type
-        const int success = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-        ENX_ENGINE_ASSERT(success, "Could not initialize GLFW!")
-
         SetVSync(true);
 
         // -------------------------------Setup Event Callbacks for GLFW-------------------------------
@@ -182,7 +182,7 @@ namespace EngineX
     void Window_Windows::OnUpdate()
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_RenderingContext->SwapBuffers();
     }
 
     void Window_Windows::Shutdown()

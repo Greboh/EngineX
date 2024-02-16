@@ -4,6 +4,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "EngineX/Rendering/RenderingContext.h"
+
 namespace EngineX
 {
     class Window_Windows : public Window
@@ -38,7 +40,8 @@ namespace EngineX
 
         GLFWwindow* m_Window;
 
-    private:
+        RenderingContext* m_RenderingContext;
+
         // Store all data that GLFW might need ..
         struct GLFW_WindowData
         {

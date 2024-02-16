@@ -1,8 +1,4 @@
 ﻿#pragma once
-
-#include "enxpch.h"
-
-#include "Core.h"
 #include "../Events/Event.h"
 
 namespace EngineX
@@ -22,8 +18,8 @@ namespace EngineX
         WindowBaseVars
         (
             const std::string& name = "EngineX",
-            unsigned int width = 1280,
-            unsigned int height = 720
+            unsigned int width = 1920,
+            unsigned int height = 1080
         ): Name(name), Width(width), Height(height)
         {}
     };

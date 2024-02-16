@@ -15,5 +15,7 @@ public:
     void OnImGuiRender() override;
 
 private:
+    static void MakeDockSpace();
+    
     EngineX::Ref<EngineX::ImGuiConsole> m_ImGuiConsole = EngineX::CreateRef<EngineX::ImGuiConsole>();
 };

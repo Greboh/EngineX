@@ -8,19 +8,12 @@ namespace EngineX
     class ImGuiConsole
     {
     public:
-        ImGuiTextBuffer Buf;
-        ImGuiTextFilter Filter;
-        ImVector<int> LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
-        bool AutoScroll; // Keep scrolling if already at the bottom.
-
         ImGuiConsole()
         {
-            AutoScroll = true;
+            m_AutoScroll = true;
             Clear();
         }
-
-        // Function to extract the log level from the message string
-
+        
         void Clear();
 
         void AddLog(const char* fmt, ...);
@@ -46,11 +39,19 @@ namespace EngineX
                     return spdlog::level::warn;
                 if (level_str == "info")
                     return spdlog::level::info;
+                if(level_str == "critical")
+                    return spdlog::level::critical;
             }
 
             // Default to info level if the level couldn't be extracted
             return spdlog::level::trace;
         }
+
+    private:
+        ImGuiTextBuffer m_TextBuffer;
+        ImGuiTextFilter m_TextFilter;
+        ImVector<int> m_LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
+        bool m_AutoScroll; // Keep scrolling if already at the b
     };
     
 }
