@@ -1,11 +1,11 @@
 project "EngineX"
-   kind "SharedLib"
+   kind "StaticLib"
    language "C++"
    cppdialect "C++20"
-   staticruntime "off"
+   staticruntime "on"
 
-   targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
+   targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
+   objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
 
  -- Specify the PCH header file
     pchheader "enxpch.h"
@@ -24,6 +24,11 @@ project "EngineX"
             "%{IncludeDir.spdlog}"
     }
 
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+
     links
     {
             "GLFW",
@@ -39,10 +44,6 @@ project "EngineX"
             "ENX_PLATFORM_WINDOWS",
             "ENX_BUILD_DLL",
             "GLFW_INCLUDE_NONE"
-        }
-        postbuildcommands
-        {
-             ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. OutputDir .. "/Sandbox")
         }
 
    filter "configurations:Debug"

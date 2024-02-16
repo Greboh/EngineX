@@ -6,11 +6,10 @@
 #include "LayerStack.h"
 #include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
-
-
+#include "EngineX/ImGui/ImGuiLayer.h"
 namespace EngineX
 {
-    class ENGINEX_API Application
+    class Application
     {
     public:
         Application();
@@ -31,6 +30,7 @@ namespace EngineX
         
         // Unique because only this class should own the window!
         Scope<Window> m_Window;
+        ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
 
         LayerStack m_Layerstack;

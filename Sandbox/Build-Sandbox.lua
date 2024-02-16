@@ -2,17 +2,16 @@ project "Sandbox"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"
-   staticruntime "off"
+   staticruntime "on"
 
    files { "Source/**.h", "Source/**.cpp" }
 
    includedirs
    {
       "Source",
-      "../EngineX/vendor/spdlog/include",
-
-	  -- Include EngineX
-	  "../EngineX/Source"
+      "%{wks.location}/EngineX/vendor/spdlog/include",
+      "%{wks.location}/EngineX/vendor/ImGui",
+      "%{wks.location}/EngineX/Source",
    }
 
    links
@@ -20,8 +19,8 @@ project "Sandbox"
       "EngineX"
    }
 
-   targetdir ("../bin/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. OutputDir .. "/%{prj.name}")
+   targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
+   objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
 
    filter "system:windows"
        systemversion "latest"

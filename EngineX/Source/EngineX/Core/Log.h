@@ -1,21 +1,23 @@
 ﻿#pragma once
 
-#include "Core.h"
-
 #pragma warning(push, 0)
+#include "..\ImGui\ImGuiConsoleWidget.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 #pragma warning(pop)
 
 namespace EngineX
 {
-    class ENGINEX_API Log
+    class Log
     {
     public:
         static void Init();
-        
+        static void AttachImGuiConsoleSink(const std::shared_ptr<ImGuiConsole>& console);
+
+
         static Ref<spdlog::logger>& GetEngineLogger() { return s_EngineLogger; }
         static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+
     private:
         static Ref<spdlog::logger> s_EngineLogger;
         static Ref<spdlog::logger> s_ClientLogger;

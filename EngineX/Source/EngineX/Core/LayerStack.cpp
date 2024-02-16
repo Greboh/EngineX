@@ -5,8 +5,6 @@ namespace EngineX
 {
     LayerStack::LayerStack()
     {
-        // Start it at the beginning of the vector.
-        m_LayerInsert = m_Layers.begin();
     }
 
     LayerStack::~LayerStack()
@@ -14,6 +12,7 @@ namespace EngineX
         // Remove all layers
         for (Layer* layer : m_Layers)
         {
+            layer->OnDetach();
             delete layer;
         }
     }
@@ -21,7 +20,8 @@ namespace EngineX
     void LayerStack::InsertLayer(Layer* layer)
     {
         // Insert layer at the position based on m_LayerInsert (begin | end)
-        m_LayerInsert = m_Layers.emplace(m_LayerInsert, layer);
+         m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
+        m_LayerInsertIndex++;
     }
 
     void LayerStack::RemoveLayer(Layer* layer)
@@ -31,8 +31,9 @@ namespace EngineX
         if( const auto iteration= std::ranges::find(m_Layers, layer)
             ; iteration != m_Layers.end())
         {
+            layer->OnDetach();
             m_Layers.erase(iteration);
-            --m_LayerInsert;
+            m_LayerInsertIndex--;
         }
     }
 
@@ -47,6 +48,7 @@ namespace EngineX
         if( const auto iteration= std::ranges::find(m_Layers, overlay)
            ; iteration != m_Layers.end())
         {
+            overlay->OnDetach();
             m_Layers.erase(iteration);
         }
     }
