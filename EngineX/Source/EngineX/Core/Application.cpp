@@ -25,13 +25,7 @@ namespace EngineX
         // Binding a VAO means that subsequent vertex attribute settings and buffer bindings will be stored in this VAO.
         glGenVertexArrays(1, &m_VertexArray);
         glBindVertexArray(m_VertexArray);
-
-        // Generate a vertex buffer object (VBO) and bind it to GL_ARRAY_BUFFER target
-        // VBOs store vertex data, such as positions, colors, or texture coordinates.
-        // Binding a VBO to GL_ARRAY_BUFFER means that it will be used to store vertex attribute data.
-        glGenBuffers(1, &m_VertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-
+        
         // Define the vertex data
         // This array contains the vertex positions for a triangle.
         // Each vertex has three components: x, y, and z coordinates.
@@ -41,10 +35,8 @@ namespace EngineX
             0.5f, -0.5f, 0.0f, // Lower right
             0.0f, 0.5f, 0.0f // Upper middle
         };
-
-        // Fill the vertex buffer with vertex data
-        // The data in 'vertices' is copied into the currently bound GL_ARRAY_BUFFER (m_VertexBuffer).
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        
+        m_VertexBuffer.reset(VertexBuffer::Create(sizeof(vertices), vertices));
 
         // Enable the vertex attribute array at index 0
         // This enables the vertex attribute array at index 0 (position attribute).
@@ -55,21 +47,46 @@ namespace EngineX
         // This describes how the data in the VBO is laid out for the position attribute.
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-        // Generate an index buffer object (IBO) and bind it to GL_ELEMENT_ARRAY_BUFFER target
-        // IBOs store indices used for indexed rendering.
-        // Binding an IBO to GL_ELEMENT_ARRAY_BUFFER means that it will be used for indexed rendering.
-        glGenBuffers(1, &m_IndexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
-
         // Define the indices for indexed rendering
         // These indices specify the order in which vertices are used to form primitives (e.g., triangles).
-        unsigned int indices[3] = {0, 1, 2};
+        uint32_t indices[3] = {0, 1, 2};
 
-        // Fill the index buffer with index data
-        // The data in 'indices' is copied into the currently bound GL_ELEMENT_ARRAY_BUFFER (m_IndexBuffer).
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        m_IndexBuffer.reset(IndexBuffer::Create(std::size(indices), indices));
 
         // --------------------------------------------------------------------------------------------
+
+        // -----------------------------------Shading the triangle-------------------------------------
+        std::string vertexSource = R"(
+            #version 330 core
+            
+            layout(location = 0) in vec3 a_Position;
+
+            out vec3 v_Position;
+
+            void main()
+            {
+                v_Position = a_Position;
+                gl_Position = vec4(a_Position, 1.0);
+            }    
+        )";
+
+        std::string fragmentSource = R"(
+            #version 330 core
+            
+            layout(location = 0) out vec4 color;
+
+            in vec3 v_Position;
+
+            void main()
+            {
+                color = vec4(v_Position * 0.5 + 0.5, 1.0);
+            }    
+        )";
+        
+        m_Shader = CreateScope<Shader>(vertexSource, fragmentSource);
+        
+        // --------------------------------------------------------------------------------------------
+
     }
 
     Application::~Application() = default;
@@ -101,9 +118,9 @@ namespace EngineX
             glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            glUseProgram(0);
+            m_Shader->Bind();
             glBindVertexArray(m_VertexArray);
-            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+            glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
             
             // NOTE: Currently we are updating our layers first and then our window .. Might change in the future
 
