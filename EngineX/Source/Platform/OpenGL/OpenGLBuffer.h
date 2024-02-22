@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "EngineX/Rendering/Buffer.h"
-#include "glad/glad.h"
+#include "EngineX/Core/Rendering/Buffer.h"
 
 namespace EngineX
 {
@@ -17,7 +16,7 @@ namespace EngineX
         inline virtual void SetLayout(const BufferLayout& layout) override {m_Layout = layout; }
 
     private:
-        unsigned int m_RendererID;
+        RenderID m_RendererID;
         BufferLayout m_Layout;
     };
 
@@ -29,13 +28,11 @@ namespace EngineX
         ~OpenGLIndexBuffer() override;
         void Bind() const override;
         void Unbind() const override;
-
-        
         
         inline uint32_t GetCount() const override {return m_Count;}
 
     private:
-        unsigned int m_RendererID;
+        RenderID m_RendererID;
         uint32_t m_Count;
     };
 }

@@ -28,5 +28,7 @@ namespace EngineX
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
+
+    typedef uint32_t RenderID;
 }
 

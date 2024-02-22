@@ -7,3 +7,6 @@
 [submodule "EngineX/vendor/imgui"]
 	path = EngineX/vendor/imgui
 	url = https://github.com/Greboh/imgui
+[submodule "EngineX/vendor/glm"]
+	path = EngineX/vendor/glm
+	url = https://github.com/g-truc/glm

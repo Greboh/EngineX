@@ -81,6 +81,14 @@ namespace EngineX
             ENX_ENGINE_ASSERT(false, "Unknown ShaderDataType!")
             return 0;
         }
+
+        std::string ToString() const
+        {
+            std::stringstream ss;
+            ss << "Name: " << Name << ", Size: " << Size << ", Offset: " << Offset << ", Normalized: " << Normalized <<")";
+            return ss.str();
+        }
+
     };
 
     class BufferLayout

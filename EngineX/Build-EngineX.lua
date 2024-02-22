@@ -21,6 +21,7 @@ project "EngineX"
             "%{IncludeDir.GLFW}",
             "%{IncludeDir.Glad}",
             "%{IncludeDir.ImGui}",
+            "%{IncludeDir.glm}",
             "%{IncludeDir.spdlog}"
     }
 

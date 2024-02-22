@@ -14,7 +14,7 @@ namespace EngineX
         void Unbind() const;
 
     private:
-        uint32_t m_RendererID;
+        RenderID m_RendererID;
     };
 
     

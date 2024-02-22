@@ -11,6 +11,7 @@ project "Sandbox"
       "Source",
       "%{wks.location}/EngineX/vendor/spdlog/include",
       "%{wks.location}/EngineX/vendor/ImGui",
+      "%{wks.location}/EngineX/vendor/glm",
       "%{wks.location}/EngineX/Source",
    }
 

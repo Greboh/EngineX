@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "EngineX/Rendering/RenderingContext.h"
+#include "EngineX/Core/Rendering/RenderingContext.h"
 
 struct GLFWwindow;
 

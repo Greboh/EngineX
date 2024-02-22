@@ -25,6 +25,8 @@ namespace EngineX
         virtual void OnEvent(Event& e) {}
         virtual void OnImGuiRender() {}
 
+        virtual void OnRender() {}
+
         inline const std::string& GetName() const {return m_DebugName; }
 
     protected:

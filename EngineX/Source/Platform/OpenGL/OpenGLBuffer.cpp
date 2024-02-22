@@ -40,8 +40,8 @@ namespace EngineX
         glCreateBuffers(1, &m_RendererID);
         OpenGLIndexBuffer::Bind();
 
-        // Fill the vertex buffer with vertex data
-        // The data in 'vertices' is copied into the currently bound GL_ARRAY_BUFFER (m_RendererId).
+        // Fill the index buffer with data
+        // The data in 'indices' is copied into the currently bound GL_ARRAY_BUFFER (m_RendererId).
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
     }
 

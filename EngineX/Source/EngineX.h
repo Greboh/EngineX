@@ -13,6 +13,10 @@
 #include "EngineX/Core/KeyCodes.h"
 #include "EngineX/Core/MouseCodes.h"
 
+#include "EngineX/Core/Rendering/Render.h"
+#include "EngineX/Core/Rendering/RenderCommand.h"
+
+
 // ---------------Entry Point---------------
 #include "EngineX/Core/EntryPoint.h"
 // ---------------Entry Point---------------

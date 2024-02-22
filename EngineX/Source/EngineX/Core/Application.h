@@ -7,8 +7,9 @@
 #include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
 #include "EngineX/ImGui/ImGuiLayer.h"
-#include "EngineX/Rendering/Buffer.h"
-#include "EngineX/Rendering/Shader.h"
+#include "EngineX/Core/Rendering/Buffer.h"
+#include "EngineX/Core/Rendering/Shader.h"
+#include "EngineX/Core/Rendering/VertexArray.h"
 
 namespace EngineX
 {
@@ -40,10 +41,10 @@ namespace EngineX
 
         LayerStack m_Layerstack;
         
-        unsigned int m_VertexArray;
-        Scope<Shader> m_Shader;
-        Scope<VertexBuffer> m_VertexBuffer;
-        Scope<IndexBuffer> m_IndexBuffer;
+        Ref<Shader> m_Shader;
+        Ref<VertexBuffer> m_VertexBuffer;
+        Ref<IndexBuffer> m_IndexBuffer;
+        Ref<VertexArray> m_VertexArray;
     };
 
     // To be defined in CLIENT
