@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <glm/glm.hpp>
+#include <glm/vec4.hpp>
 
 #include "EngineX/Core/Base.h"
 #include "VertexArray.h"

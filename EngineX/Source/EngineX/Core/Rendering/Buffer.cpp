@@ -11,7 +11,7 @@ namespace EngineX
     {
         switch (Render::GetAPI())
         {
-        case RenderAPI::API::NONE:               ENX_ENGINE_ASSERT(false, "RenderAPI::None is currently not supported!")
+            case RenderAPI::API::NONE:               ENX_ENGINE_ASSERT(false, "RenderAPI::None is currently not supported!")
                
             case RenderAPI::API::OPENGL:             return new OpenGLVertexBuffer(size, vertices);
         }

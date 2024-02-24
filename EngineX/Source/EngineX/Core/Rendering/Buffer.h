@@ -139,7 +139,7 @@ namespace EngineX
     class VertexBuffer
     {
     public:
-        virtual ~VertexBuffer() {}
+        virtual ~VertexBuffer() = default;
         
         /**
          * \brief Creates a VertexBuffer using the current RenderAPI

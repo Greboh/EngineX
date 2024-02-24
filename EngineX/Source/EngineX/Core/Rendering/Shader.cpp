@@ -1,132 +1,71 @@
 ﻿#include "enxpch.h"
 #include "Shader.h"
 
-#include "glad/glad.h"
+#include "Render.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace EngineX
 {
-    Shader::Shader(const std::string& vertexSource, const std::string& fragmentSource)
+    ShaderProgramSource Shader::ParseShader(const std::string& filePath)
     {
-        // Create an empty vertex shader handle
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        std::ifstream stream(filePath);
+        
+        ENX_ENGINE_ASSERT(stream.is_open(), "No shader found at provided filePath! {0}", filePath)
 
-        // Send the vertex shader source code to GL
-        // Note that std::string's .c_str is NULL character terminated.
-        const GLchar* source = vertexSource.c_str();
-        glShaderSource(vertexShader, 1, &source, 0);
-
-        // Compile the vertex shader
-        glCompileShader(vertexShader);
-
-        GLint isCompiled = 0;
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
-        if (isCompiled == GL_FALSE)
+        enum class ShaderType
         {
-            GLint maxLength = 0;
-            glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+            NONE = -1, VERTEX = 0, FRAGMENT = 1
+        };
+        
+        std::string line;
+        auto type = ShaderType::NONE;
+        std::stringstream ss[2];
 
-            // The maxLength includes the NULL character
-            std::vector<GLchar> infoLog(maxLength);
-            glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
-
-            // We don't need the shader anymore.
-            glDeleteShader(vertexShader);
-
-            // Use the infoLog as you see fit.
-            ENX_ENGINE_ERROR("Vertex shader compilation failure! >> {0}", infoLog.data());
-            ENX_ERROR("Vertex shader compilation failure! >> {0}", infoLog.data());
-            
-            // In this simple program, we'll just leave
-            return;
-        }
-
-        // Create an empty fragment shader handle
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-        // Send the fragment shader source code to GL
-        // Note that std::string's .c_str is NULL character terminated.
-        source = fragmentSource.c_str();
-        glShaderSource(fragmentShader, 1, &source, 0);
-
-        // Compile the fragment shader
-        glCompileShader(fragmentShader);
-
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
-        if (isCompiled == GL_FALSE)
+        while (std::getline(stream, line))
         {
-            GLint maxLength = 0;
-            glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-            // The maxLength includes the NULL character
-            std::vector<GLchar> infoLog(maxLength);
-            glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
-
-            // We don't need the shader anymore.
-            glDeleteShader(fragmentShader);
-            // Either of them. Don't leak shaders.
-            glDeleteShader(vertexShader);
-
-            ENX_ENGINE_ERROR("Fragment shader compilation failure! >> {0}", infoLog.data());
-            ENX_ERROR("Fragment shader compilation failure! >> {0}", infoLog.data());
-
-            return;
+            if (line.find("//type") != std::string::npos)
+            {
+                if (line.find("vertex") != std::string::npos)
+                {
+                    type = ShaderType::VERTEX;
+                }
+                else if (line.find("fragment") != std::string::npos || line.find("pixel"))
+                {
+                    type = ShaderType::FRAGMENT;
+                }
+            }
+            else
+            {
+                ss[static_cast<int>(type)] << line << '\n';
+            }
         }
-
-        // Vertex and fragment shaders are successfully compiled.
-        // Now time to link them together into a program.
-        // Get a program object.
-        m_RendererID = glCreateProgram();
-
-        // Attach our shaders to our program
-        glAttachShader(m_RendererID, vertexShader);
-        glAttachShader(m_RendererID, fragmentShader);
-
-        // Link our program
-        glLinkProgram(m_RendererID);
-
-        // Note the different functions here: glGetProgram* instead of glGetShader*.
-        GLint isLinked = 0;
-        glGetProgramiv(m_RendererID, GL_LINK_STATUS, &isLinked);
-        if (isLinked == GL_FALSE)
-        {
-            GLint maxLength = 0;
-            glGetProgramiv(m_RendererID, GL_INFO_LOG_LENGTH, &maxLength);
-
-            // The maxLength includes the NULL character
-            std::vector<GLchar> infoLog(maxLength);
-            glGetProgramInfoLog(m_RendererID, maxLength, &maxLength, &infoLog[0]);
-
-            // We don't need the program anymore.
-            glDeleteProgram(m_RendererID);
-            // Don't leak shaders either.
-            glDeleteShader(vertexShader);
-            glDeleteShader(fragmentShader);
-
-            // Use the infoLog as you see fit.
-            ENX_ENGINE_ERROR("Linking shader compilation failure! >> {0}", infoLog.data());
-            ENX_ERROR("Linking shader compilation failure! >> {0}", infoLog.data());
-            
-            // In this simple program, we'll just leave
-            return;
-        }
-
-        // Always detach shaders after a successful link.
-        glDetachShader(m_RendererID, vertexShader);
-        glDetachShader(m_RendererID, fragmentShader);
+        
+        return {ss[0].str(), ss[1].str()};
     }
 
-    Shader::~Shader()
+    Shader* Shader::Create(const std::string& vertexSource, const std::string& fragmentSource)
     {
-        glDeleteProgram(m_RendererID);
+        switch (Render::GetAPI())
+        {
+        case RenderAPI::API::NONE: ENX_ENGINE_ASSERT(false, "RenderAPI::None is currently not supported!")
+
+        case RenderAPI::API::OPENGL: return new OpenGLShader(vertexSource, fragmentSource);
+        }
+
+        ENX_ENGINE_ASSERT(false, "Unknown RenderAPI")
+        return nullptr;
     }
 
-    void Shader::Bind() const
+    Shader* Shader::Create(const std::string& shaderSource)
     {
-        glUseProgram(m_RendererID);
-    }
+        switch (Render::GetAPI())
+        {
+        case RenderAPI::API::NONE: ENX_ENGINE_ASSERT(false, "RenderAPI::None is currently not supported!")
 
-    void Shader::Unbind() const
-    {
-        glUseProgram(0);
+        case RenderAPI::API::OPENGL: return new OpenGLShader(shaderSource);
+        }
+
+        ENX_ENGINE_ASSERT(false, "Unknown RenderAPI")
+        return nullptr;
     }
 }
