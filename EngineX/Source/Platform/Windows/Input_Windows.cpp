@@ -9,7 +9,7 @@ namespace EngineX
     bool InputManager::IsKeyPressed(KeyCode key)
     {
         // In order to call glfw to get a key, we need the glfw window. For we retrieve our BaseWindow
-        const auto window = Application::Get().GetWindow().GetBaseWindow();
+        const auto window = Application::GetInstance().GetWindow().GetBaseWindow();
 
         // Since this is inside Input_Windows, we know it's for Windows
         // which currently only supports a GLFW Window therefor we can safely cast it.
@@ -21,7 +21,7 @@ namespace EngineX
 
     bool InputManager::IsMouseButtonPressed(MouseCode button)
     {
-        const auto window = Application::Get().GetWindow().GetBaseWindow();
+        const auto window = Application::GetInstance().GetWindow().GetBaseWindow();
 
         const auto buttonState = glfwGetMouseButton(static_cast<GLFWwindow*>(window), button);
 
@@ -30,7 +30,7 @@ namespace EngineX
 
     std::pair<float, float> InputManager::GetMousePosition()
     {
-         auto window = Application::Get().GetWindow().GetBaseWindow();
+         auto window = Application::GetInstance().GetWindow().GetBaseWindow();
 
         double xpos, ypos;
         glfwGetCursorPos(static_cast<GLFWwindow*>(window), &xpos, &ypos);

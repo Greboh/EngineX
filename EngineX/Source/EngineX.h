@@ -15,6 +15,8 @@
 
 #include "EngineX/Core/Rendering/Render.h"
 #include "EngineX/Core/Rendering/RenderCommand.h"
+#include "EngineX/Core/Rendering/Shader.h"
+#include "EngineX/Core/Rendering/VertexArray.h"
 
 
 // ---------------Entry Point---------------

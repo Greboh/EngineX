@@ -1,88 +1,86 @@
 ﻿#include "EditorLayer.h"
 
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_transform.hpp>
+
+#include "EngineX/Core/Application.h"
 #include "EngineX/Core/InputManager.h"
 #include "EngineX/Core/Rendering/RenderCommand.h"
 #include "EngineX/Core/Rendering/Render.h"
 
 #include "glm/glm.hpp"
 
+static bool s_showConsole = true;
+static bool s_DebuggerPanel = true;
+static bool s_ObjectManipulationPanel = true;
+static bool s_showDemo = false;
+
 EditorLayer::EditorLayer() : Layer("EditorLayer")
 {
     // -------------------------------Rendering A Triangle-------------------------------
-    
+
     m_VertexArray.reset(EngineX::VertexArray::Create());
 
     // Define the vertex data
     // This array contains the vertex positions for a triangle.
     // Each vertex has three components: x, y, and z coordinates.
     // It also contains rgba values for a given indices
-    float vertices[3 * 7] =
+    // float vertices[4 * 7] =
+    // {
+    //     -0.5f, -0.5f, 0.0f,       0.8f,0.0f, 0.4f, 1.0f, // Lower left with Redish color
+    //     0.5f, -0.5f, 0.0f,        0.4f, 0.8f, 0.0f, 1.0f, // Lower right with greenish color
+    //     0.5f, 0.5f, 0.0f,         0.0f, 0.4f, 0.8f, 1.0f, // Upper right with blueish color
+    //     -0.5f, 0.5f, 0.0f,        0.5f, 0.1f, 0.4f, 1.0f // Upper left with blueish color
+    // };
+    float vertices[4 * 5] =
     {
-        -0.5f, -0.5f, 0.0f, 0.8f, 0.0f, 0.4f, 1.0f, // Lower left with Redish color
-        0.5f, -0.5f, 0.0f, 0.4f, 0.8f, 0.0f, 1.0f, // Lower right with greenish color
-        0.0f, 0.5f, 0.0f, 0.0f, 0.4f, 0.8f, 1.0f // Upper middle with blueish color
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Lower left with Redish color
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Lower right with greenish color
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // Upper right with blueish color
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f // Upper left with blueish color
     };
 
+
     m_VertexBuffer.reset(EngineX::VertexBuffer::Create(sizeof(vertices), vertices));
+
+    // m_VertexBuffer->SetLayout
+    // ({
+    //     {EngineX::ShaderDataType::Float3, "a_Position"},
+    //     {EngineX::ShaderDataType::Float4, "a_Color"},
+    // });
 
     m_VertexBuffer->SetLayout
     ({
         {EngineX::ShaderDataType::Float3, "a_Position"},
-        {EngineX::ShaderDataType::Float4, "a_Color"},
+        {EngineX::ShaderDataType::Float2, "a_Texture"},
     });
-
 
     m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
     // Define the indices for indexed rendering
     // These indices specify the order in which vertices are used to form primitives (e.g., triangles).
-    uint32_t indices[3] = {0, 1, 2};
+    uint32_t indices[6] =
+    {
+        0, 1, 2,
+        2, 3, 0
+    };
 
     m_IndexBuffer.reset(EngineX::IndexBuffer::Create(std::size(indices), indices));
 
     m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
-    // --------------------------------------------------------------------------------------------
+    m_Shader.reset(EngineX::Shader::Create(std::string(ASSETS_DIR) + "Shaders/3DTextureShader.glsl"));
+    // m_Shader.reset(EngineX::Shader::Create(std::string(ASSETS_DIR) + "Shaders/3DShader.glsl"));
 
-    // -----------------------------------Shading the triangle-------------------------------------
+    m_Model = rotate(m_Model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    
+    m_Projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
-    std::string vertexSource = R"(
-            #version 330 core
-            
-            layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
-
-            out vec3 v_Position;
-            out vec4 v_Color;
-
-            void main()
-            {
-                v_Position = a_Position;
-                v_Color = a_Color;
-                gl_Position = vec4(a_Position, 1.0);
-            }    
-        )";
-
-    std::string fragmentSource = R"(
-            #version 330 core
-            
-            layout(location = 0) out vec4 color;
-
-            in vec3 v_Position;
-            in vec4 v_Color;
-
-            void main()
-            {
-                color = v_Color;
-            }    
-        )";
-
-    m_Shader = EngineX::CreateScope<EngineX::Shader>(vertexSource, fragmentSource);
+    m_UseVSync = EngineX::Application::GetInstance().GetWindow().IsVSync();
 }
 
 void EditorLayer::OnAttach()
 {
-    // First, create a shared pointer to an instance of ImGuiConsole using make_shared
     EngineX::Log::AttachImGuiConsoleSink(m_ImGuiConsole);
 }
 
@@ -95,9 +93,16 @@ void EditorLayer::OnRender()
     EngineX::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
     EngineX::RenderCommand::Clear();
 
+    m_View = translate(glm::mat4(1.0f), m_TransformCoords);
+    
     EngineX::Render::BeginScene();
     {
         m_Shader->Bind();
+
+        m_Shader->UploadUniform("u_Model", m_Model);
+        m_Shader->UploadUniform("u_View", m_View);
+        m_Shader->UploadUniform("u_Projection", m_Projection);
+
         EngineX::Render::Submit(m_VertexArray);
     }
     EngineX::Render::EndScene();
@@ -119,11 +124,23 @@ void EditorLayer::OnImGuiRender()
 {
     MakeDockSpace();
 
-    static bool showConsole = true;
-    m_ImGuiConsole->Draw("Console", &showConsole);
-
-    static bool showDemo = true;
-    ImGui::ShowDemoWindow(&showDemo);
+    // Panel checking
+    if (s_DebuggerPanel)
+    {
+        DebuggerPanel(&s_DebuggerPanel);
+    }
+    if (s_ObjectManipulationPanel)
+    {
+        ObjectManipulationPanel(&s_ObjectManipulationPanel);
+    }
+    if (s_showConsole)
+    {
+        m_ImGuiConsole->Draw("Console", &s_showConsole);
+    }
+    if (s_showDemo)
+    {
+        ImGui::ShowDemoWindow(&s_showDemo);
+    }
 }
 
 void EditorLayer::MakeDockSpace()
@@ -180,9 +197,131 @@ void EditorLayer::MakeDockSpace()
 
     style.WindowMinSize.x = minWinSizeX;
 
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Settings"))
+        {
+            // TODO: Maybe make these into flags for default panels? .. To avoid bools and make the toggle prettier
+            if (ImGui::MenuItem(s_showConsole ? "Hide Console Panel" : "Show Console Panel", nullptr, nullptr, true))
+            {
+                s_showConsole = !s_showConsole;
+            }
+            if (ImGui::MenuItem(s_DebuggerPanel ? "Hide Debugger Panel" : "Show Debugger Panel", nullptr, nullptr,
+                                true))
+            {
+                s_DebuggerPanel = !s_DebuggerPanel;
+            }
+            if (ImGui::MenuItem(s_showDemo ? "Hide Demo Panel" : "Show Demo Panel", nullptr, nullptr, true))
+            {
+                s_showDemo = !s_showDemo;
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Manipulation"))
+        {
+            if (ImGui::MenuItem(
+                s_ObjectManipulationPanel ? "Hide Objet Manipulation Panel" : "Show Objet Manipulation Panel", nullptr,
+                nullptr, true))
+            {
+                s_ObjectManipulationPanel = !s_ObjectManipulationPanel;
+            }
+
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
 
     ImGui::End();
 }
+
+void EditorLayer::DebuggerPanel(bool* open)
+{
+    if (!ImGui::Begin("Debugger Panel", open))
+    {
+        ImGui::End();
+        return;
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+
+    if (ImGui::BeginPopupContextItem())
+    {
+        if (ImGui::MenuItem("Close Debugger"))
+            *open = false;
+        ImGui::EndPopup();
+    }
+
+    ImGui::SeparatorText("Stats");
+    ImGui::Text("Editor average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
+                ImGui::GetIO().Framerate);
+
+    ImGui::CustomSpacing(ImVec2(0.0f, 10.0f));
+
+    if (ImGui::CollapsingHeader("Settings"))
+    {
+        if (ImGui::TreeNode("Engine"))
+        {
+            ImGui::SeparatorText("General");
+
+            if (ImGui::Checkbox("Use VSync", &m_UseVSync))
+            {
+                EngineX::Application::GetInstance().GetWindow().SetVSync(m_UseVSync);
+            }
+
+            ImGui::TreePop();
+        }
+    }
+    ImGui::End();
+}
+
+void EditorLayer::ObjectManipulationPanel(bool* open)
+{
+    if (!ImGui::Begin("Object Manipulation Panel", open))
+    {
+        ImGui::End();
+        return;
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+
+    if (ImGui::TreeNode("Transform"))
+    {
+        // Position
+       { 
+           ImGui::CustomSpacing(ImVec2(0.0f, 5.0f)); // Add a separator for visual clarity
+
+           ImGui::Columns(4);
+
+           ImGui::Text("Position:");
+           ImGui::NextColumn();
+        
+           // Display labels for XYZ coordinates
+           ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+           ImGui::Text("X:");
+           ImGui::SameLine(); // Move next item to the same line
+           ImGui::DragFloat("##X", &m_TransformCoords.x, 0.1f); // Drag input for X coordinate
+           ImGui::NextColumn();
+
+           ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+           ImGui::Text("Y:");
+           ImGui::SameLine(); // Move next item to the same line
+           ImGui::DragFloat("##Y", &m_TransformCoords.y, 0.1f); // Drag input for X coordinate
+           ImGui::NextColumn();
+
+           ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+           ImGui::Text("Z:");
+           ImGui::SameLine(); // Move next item to the same line
+           ImGui::DragFloat("##Z", &m_TransformCoords.z, 0.1f); // Drag input for X coordinate
+
+           ImGui::Columns();
+       }
+
+        ImGui::TreePop();
+    }
+
+    ImGui::End();
+}
+
 
 void EditorLayer::OnEvent(EngineX::Event& e)
 {

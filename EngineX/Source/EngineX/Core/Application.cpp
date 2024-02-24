@@ -1,7 +1,6 @@
 ﻿#include "enxpch.h"
 
 #include "Application.h"
-#include "Rendering/RenderCommand.h"
 
 namespace EngineX
 {

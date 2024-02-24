@@ -67,7 +67,6 @@ namespace EngineX
                 (void*)element.Offset
             );
 
-            ENX_ENGINE_INFO(element.ToString());
             elementIndex++;
         }
 

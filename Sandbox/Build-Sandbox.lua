@@ -20,6 +20,11 @@ project "Sandbox"
       "EngineX"
    }
 
+   defines
+   {
+        "ASSETS_DIR=\"%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}/Source/EngineX/Assets/\""
+   }
+
    targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
    objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
 

@@ -26,7 +26,7 @@ namespace EngineX
         void InsertLayer(Layer* layer);
         void InsertOverlay(Layer* layer);
 
-        inline static Application& Get() {return *s_Instance; }
+        inline static Application& GetInstance() {return *s_Instance; }
         inline Window& GetWindow() const { return *m_Window; }
         
     private:

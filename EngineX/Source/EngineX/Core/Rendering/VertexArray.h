@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "EngineX/Rendering/Buffer.h"
+#include "EngineX/Core/Rendering/Buffer.h"
 
 namespace EngineX
 {
