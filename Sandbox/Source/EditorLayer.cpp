@@ -1,14 +1,14 @@
 ﻿#include "EditorLayer.h"
 
+#include <backends/imgui_impl_opengl3_loader.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 #include "EngineX/Core/Application.h"
 #include "EngineX/Core/InputManager.h"
-#include "EngineX/Core/Rendering/RenderCommand.h"
-#include "EngineX/Core/Rendering/Render.h"
+#include "EngineX/Rendering/RenderCommand.h"
 
-#include "glm/glm.hpp"
 
 static bool s_showConsole = true;
 static bool s_DebuggerPanel = true;
@@ -17,29 +17,46 @@ static bool s_showDemo = false;
 
 EditorLayer::EditorLayer() : Layer("EditorLayer")
 {
-    // -------------------------------Rendering A Triangle-------------------------------
-
     m_VertexArray.reset(EngineX::VertexArray::Create());
 
-    // Define the vertex data
-    // This array contains the vertex positions for a triangle.
-    // Each vertex has three components: x, y, and z coordinates.
-    // It also contains rgba values for a given indices
-    // float vertices[4 * 7] =
-    // {
-    //     -0.5f, -0.5f, 0.0f,       0.8f,0.0f, 0.4f, 1.0f, // Lower left with Redish color
-    //     0.5f, -0.5f, 0.0f,        0.4f, 0.8f, 0.0f, 1.0f, // Lower right with greenish color
-    //     0.5f, 0.5f, 0.0f,         0.0f, 0.4f, 0.8f, 1.0f, // Upper right with blueish color
-    //     -0.5f, 0.5f, 0.0f,        0.5f, 0.1f, 0.4f, 1.0f // Upper left with blueish color
-    // };
-    float vertices[4 * 5] =
+    float vertices[24 * 5] =
     {
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Lower left with Redish color
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Lower right with greenish color
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // Upper right with blueish color
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f // Upper left with blueish color
-    };
+        // front
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // 0
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, // 1
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, // 2
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, // 3
 
+        // top
+        -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, // 4
+        0.5f, 0.5f, -0.5f, 1.0f, 0.0f, // 5
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // 6
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, // 7
+
+        // left
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // 8
+        -0.5f, 0.5f, -0.5f, 1.0f, 0.0f, // 9
+        -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // 10
+        -0.5f, -0.5f, 0.5f, 0.0f, 1.0f, // 11
+
+        // right
+        0.5f, -0.5f, -0.5f, 0.0f, 0.0f, // 12
+        0.5f, 0.5f, -0.5f, 1.0f, 0.0f, // 13
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // 14
+        0.5f, -0.5f, 0.5f, 0.0f, 1.0f, // 15
+
+        // back
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, // 16
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, // 17
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // 18
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, // 19
+
+        // // bottom
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, // 20
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, // 21
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, // 22
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, // 23
+    };
 
     m_VertexBuffer.reset(EngineX::VertexBuffer::Create(sizeof(vertices), vertices));
 
@@ -59,29 +76,55 @@ EditorLayer::EditorLayer() : Layer("EditorLayer")
 
     // Define the indices for indexed rendering
     // These indices specify the order in which vertices are used to form primitives (e.g., triangles).
-    uint32_t indices[6] =
+    uint32_t indices[36] =
     {
-        0, 1, 2,
-        2, 3, 0
+        // front
+        0, 1, 2, // first triangle
+        2, 3, 0, // second triangle
+
+        // top
+        4, 5, 6, // first triangle
+        6, 7, 4, // second triangle
+
+        // left
+        8, 9, 10, // first triangle
+        10, 11, 8, // second triangle
+
+        // right
+        14, 13, 12, // 12, 13, 14, // first triangle
+        12, 15, 14, // 14, 15, 12, // second triangle
+
+        // back
+        18, 17, 16, // 16, 17, 18, // first triangle
+        16, 19, 18, // 18, 19, 16, // second triangle
+
+        // bottom
+        20, 21, 22, // first triangle
+        22, 23, 20 // second triangle
+
     };
 
     m_IndexBuffer.reset(EngineX::IndexBuffer::Create(std::size(indices), indices));
 
     m_VertexArray->SetIndexBuffer(m_IndexBuffer);
-
-    m_Shader.reset(EngineX::Shader::Create(std::string(ASSETS_DIR) + "Shaders/3DTextureShader.glsl"));
-    // m_Shader.reset(EngineX::Shader::Create(std::string(ASSETS_DIR) + "Shaders/3DShader.glsl"));
-
-    m_Model = rotate(m_Model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    
-    m_Projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-
-    m_UseVSync = EngineX::Application::GetInstance().GetWindow().IsVSync();
 }
 
 void EditorLayer::OnAttach()
 {
     EngineX::Log::AttachImGuiConsoleSink(m_ImGuiConsole);
+    glEnable(GL_DEPTH_TEST);
+
+    m_UseVSync = EngineX::Application::GetInstance().GetWindow().IsVSync();
+
+    // m_Shader.reset(EngineX::Shader::Create(std::string(ASSETS_DIR) + "Shaders/3DShader.glsl"));
+    m_Shader.reset(EngineX::Shader::Create(std::string(ASSETS_DIR) + "Shaders/3DTextureShader.glsl"));
+    m_Texture = EngineX::Texture2D::Create(std::string(ASSETS_DIR) + "Textures/Checkerboard.png");
+
+    m_Projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+    m_ClearFlags = static_cast<EngineX::RenderAPI::BufferClearFlags>(
+        EngineX::RenderAPI::BufferClearFlags::COLOR_BUFFER |
+        EngineX::RenderAPI::BufferClearFlags::DEPT_BUFFER);
 }
 
 void EditorLayer::OnDetach()
@@ -91,15 +134,22 @@ void EditorLayer::OnDetach()
 void EditorLayer::OnRender()
 {
     EngineX::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-    EngineX::RenderCommand::Clear();
+    EngineX::RenderCommand::Clear(m_ClearFlags);
 
-    m_View = translate(glm::mat4(1.0f), m_TransformCoords);
+    m_RotationMatrix =
+     rotate(glm::mat4(1.0f), glm::radians(m_RotationRadians.x), glm::vec3(1.0f, 0.0f, 0.0f))
+     * rotate(glm::mat4(1.0f), glm::radians(m_RotationRadians.y), glm::vec3(0.0f, 1.0f, 0.0f))
+     * rotate(glm::mat4(1.0f), glm::radians(m_RotationRadians.z), glm::vec3(0.0f, 0.0f, 1.0f));
     
+    // m_Model = rotate(glm::mat4(1.0f), glm::radians(m_Rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+    m_View = translate(glm::mat4(1.0f), m_TransformCoords);
+
     EngineX::Render::BeginScene();
     {
         m_Shader->Bind();
-
-        m_Shader->UploadUniform("u_Model", m_Model);
+        m_Texture->Bind();
+        m_Shader->UploadUniform("u_Texture", 0);
+        m_Shader->UploadUniform("u_Model", m_RotationMatrix);
         m_Shader->UploadUniform("u_View", m_View);
         m_Shader->UploadUniform("u_Projection", m_Projection);
 
@@ -287,41 +337,72 @@ void EditorLayer::ObjectManipulationPanel(bool* open)
     if (ImGui::TreeNode("Transform"))
     {
         // Position
-       { 
-           ImGui::CustomSpacing(ImVec2(0.0f, 5.0f)); // Add a separator for visual clarity
+        {
+            ImGui::CustomSpacing(ImVec2(0.0f, 5.0f)); // Add a separator for visual clarity
 
-           ImGui::Columns(4);
+            ImGui::Columns(4);
 
-           ImGui::Text("Position:");
-           ImGui::NextColumn();
-        
-           // Display labels for XYZ coordinates
-           ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
-           ImGui::Text("X:");
-           ImGui::SameLine(); // Move next item to the same line
-           ImGui::DragFloat("##X", &m_TransformCoords.x, 0.1f); // Drag input for X coordinate
-           ImGui::NextColumn();
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("Position:");
+            ImGui::NextColumn();
 
-           ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
-           ImGui::Text("Y:");
-           ImGui::SameLine(); // Move next item to the same line
-           ImGui::DragFloat("##Y", &m_TransformCoords.y, 0.1f); // Drag input for X coordinate
-           ImGui::NextColumn();
+            // Display labels for XYZ coordinates
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("X:");
+            ImGui::SameLine(); // Move next item to the same line
+            ImGui::DragFloat("##PositionX", &m_TransformCoords.x, 0.1f); // Drag input for X coordinate
+            ImGui::NextColumn();
 
-           ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
-           ImGui::Text("Z:");
-           ImGui::SameLine(); // Move next item to the same line
-           ImGui::DragFloat("##Z", &m_TransformCoords.z, 0.1f); // Drag input for X coordinate
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("Y:");
+            ImGui::SameLine(); // Move next item to the same line
+            ImGui::DragFloat("##PositionY", &m_TransformCoords.y, 0.1f); // Drag input for X coordinate
+            ImGui::NextColumn();
 
-           ImGui::Columns();
-       }
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("Z:");
+            ImGui::SameLine(); // Move next item to the same line
+            ImGui::DragFloat("##PositionZ", &m_TransformCoords.z, 0.1f); // Drag input for X coordinate
+
+            ImGui::Columns();
+        }
+
+        // Rotation
+        {
+            ImGui::CustomSpacing(ImVec2(0.0f, 15.0f)); // Add a separator for visual clarity
+
+            ImGui::Columns(4);
+
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("Rotation:");
+            ImGui::NextColumn();
+
+            // Display labels for XYZ coordinates
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("X:");
+            ImGui::SameLine(); // Move next item to the same line
+            ImGui::DragFloat("##RotationX", &m_RotationRadians.x, 1.0f, 0.0f, 360.0f); // Drag input for X coordinate
+            ImGui::NextColumn();
+
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("Y:");
+            ImGui::SameLine(); // Move next item to the same line
+            ImGui::DragFloat("##RotationY", &m_RotationRadians.y, 1.0f, 0.0f, 360.0f); // Drag input for X coordinate
+            ImGui::NextColumn();
+
+            ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
+            ImGui::Text("Z:");
+            ImGui::SameLine(); // Move next item to the same line
+            ImGui::DragFloat("##RotationZ", &m_RotationRadians.z, 1.0f, 0.0f, 360.0f); // Drag input for X coordinate
+
+            ImGui::Columns();
+        }
 
         ImGui::TreePop();
     }
 
     ImGui::End();
 }
-
 
 void EditorLayer::OnEvent(EngineX::Event& e)
 {

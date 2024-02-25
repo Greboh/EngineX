@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "OpenGLBuffer.h"
-#include "EngineX/Core/Rendering/VertexArray.h"
+#include "EngineX/Rendering/VertexArray.h"
 
 namespace EngineX
 {

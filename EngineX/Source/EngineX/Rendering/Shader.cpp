@@ -9,7 +9,8 @@ namespace EngineX
     ShaderProgramSource Shader::ParseShader(const std::string& filePath)
     {
         std::ifstream stream(filePath);
-        
+
+        ENX_ENGINE_INFO(filePath);
         ENX_ENGINE_ASSERT(stream.is_open(), "No shader found at provided filePath! {0}", filePath)
 
         enum class ShaderType

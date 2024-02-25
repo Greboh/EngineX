@@ -1,13 +1,10 @@
 ﻿#include "enxpch.h"
 #include "OpenGLShader.h"
 
-#include <fstream>
 #include <sstream>
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "EngineX/Core/Core.h"
-#include "glad/glad.h"
 
 
 namespace EngineX
@@ -95,43 +92,44 @@ namespace EngineX
 
     void OpenGLShader::UploadUniform(const std::string& name, const int& value)
     {
-        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        const auto location = GetUniformLocation(name);
+        
         glUniform1i(location, value);
     }
 
     void OpenGLShader::UploadUniform(const std::string& name, const float& value)
     {
-        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        const auto location = GetUniformLocation(name);
         glUniform1f(location, value);
     }
 
     void OpenGLShader::UploadUniform(const std::string& name, const glm::vec2& value)
     {
-        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        const auto location = GetUniformLocation(name);
         glUniform2f(location, value.x, value.y);
     }
 
     void OpenGLShader::UploadUniform(const std::string& name, const glm::vec3& value)
     {
-        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        const auto location = GetUniformLocation(name);
         glUniform3f(location, value.x, value.y, value.z);
     }
 
     void OpenGLShader::UploadUniform(const std::string& name, const glm::vec4& value)
     {
-        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        const auto location = GetUniformLocation(name);
         glUniform4f(location, value.x, value.y, value.z, value.w);
     }
 
     void OpenGLShader::UploadUniform(const std::string& name, const glm::mat3& value)
     {
-        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        const auto location = GetUniformLocation(name);
         glUniformMatrix3fv(location, value.length(), FALSE, value_ptr(value));
     }
 
     void OpenGLShader::UploadUniform(const std::string& name, const glm::mat4& value)
     {
-        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        const auto location = GetUniformLocation(name);
         glUniformMatrix4fv(location, 1, FALSE, value_ptr(value));
     }
 
@@ -185,8 +183,6 @@ namespace EngineX
 
             ENX_ENGINE_ERROR("Fragment shader compilation failure! >> {0}", infoLog.data());
             ENX_ERROR("Fragment shader compilation failure! >> {0}", infoLog.data());
-
-            return;
         }
     }
 
@@ -224,5 +220,23 @@ namespace EngineX
             // In this simple program, we'll just leave
             return;
         }
+    }
+
+    GLint OpenGLShader::GetUniformLocation(const std::string& name) const
+    {
+        if(m_UniformCache.contains(name))
+        {
+            return m_UniformCache[name];
+        }
+        
+        const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+
+        if(location == -1)
+        {
+            ENX_ENGINE_WARN("Uniform {0} doesn't exist!", name);
+        }
+
+        m_UniformCache[name] = location;
+        return location;
     }
 }

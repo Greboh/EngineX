@@ -7,9 +7,9 @@
 #include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
 #include "EngineX/ImGui/ImGuiLayer.h"
-#include "EngineX/Core/Rendering/Buffer.h"
-#include "EngineX/Core/Rendering/Shader.h"
-#include "EngineX/Core/Rendering/VertexArray.h"
+#include "EngineX/Rendering/Buffer.h"
+#include "EngineX/Rendering/Shader.h"
+#include "EngineX/Rendering/VertexArray.h"
 
 namespace EngineX
 {

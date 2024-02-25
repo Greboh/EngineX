@@ -1,5 +1,7 @@
 ﻿#pragma once
-#include "EngineX/Core/Rendering/Shader.h"
+#include <glad/glad.h>
+
+#include "EngineX/Rendering/Shader.h"
 
 namespace EngineX
 {
@@ -24,7 +26,11 @@ namespace EngineX
     private:
         void Compile(const uint32_t& vertexShader, const uint32_t& fragmentShader) const;
         void Link(const uint32_t& vertexShader, const uint32_t& fragmentShader) const;
+        GLint GetUniformLocation(const std::string& name) const;
 
         RenderID m_RendererID;
+
+        // NOTE: Has to be mutable otherwise we are not allowed to change its data.
+        mutable std::unordered_map<std::string, GLint> m_UniformCache;
     };
 }
