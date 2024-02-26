@@ -8,6 +8,7 @@
 
 #include "EngineX/Core/Base.h"
 
+#include "EngineX/Core/Timestep.h"
 #include "EngineX/Core/Application.h"
 #include "EngineX/Core/Layer.h"
 #include "EngineX/Core/Log.h"

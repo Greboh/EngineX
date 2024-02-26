@@ -1,7 +1,6 @@
 ﻿#include "EditorLayer.h"
 
 #include <backends/imgui_impl_opengl3_loader.h>
-#include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
@@ -124,7 +123,7 @@ void EditorLayer::OnDetach()
 {
 }
 
-void EditorLayer::OnRender()
+void EditorLayer::OnUpdate(EngineX::Timestep deltaTime)
 {
     EngineX::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
     EngineX::RenderCommand::Clear(m_ClearFlags);
@@ -151,37 +150,34 @@ void EditorLayer::OnRender()
         EngineX::Render::Submit(m_VertexArray, m_Shader);
     }
     EngineX::Render::EndScene();
-}
-
-void EditorLayer::OnUpdate()
-{
+    
     auto movementModifiers = glm::vec3(0.0f, 0.0f, 0.0f);
 
     if (EngineX::InputManager::IsMouseButtonPressed(EngineX::Mouse::Button1))
     {
         if (EngineX::InputManager::IsKeyPressed(EngineX::Key::A))
         {
-            movementModifiers.x += 0.1f;
+            movementModifiers.x += 1.0f * deltaTime;
         }
         if (EngineX::InputManager::IsKeyPressed(EngineX::Key::D))
         {
-            movementModifiers.x -= 0.1f;
+            movementModifiers.x -= 1.0f * deltaTime;
         }
         if (EngineX::InputManager::IsKeyPressed(EngineX::Key::E))
         {
-            movementModifiers.y -= 0.1f;
+            movementModifiers.y -= 1.0f * deltaTime;
         }
         if (EngineX::InputManager::IsKeyPressed(EngineX::Key::Q))
         {
-            movementModifiers.y += 0.1f;
+            movementModifiers.y += 1.0f * deltaTime;
         }
         if (EngineX::InputManager::IsKeyPressed(EngineX::Key::W))
         {
-            movementModifiers.z += 0.1f;
+            movementModifiers.z += 1.0f * deltaTime;
         }
         if (EngineX::InputManager::IsKeyPressed(EngineX::Key::S))
         {
-            movementModifiers.z -= 0.1f;
+            movementModifiers.z -= 1.0f * deltaTime;
         }
     }
 

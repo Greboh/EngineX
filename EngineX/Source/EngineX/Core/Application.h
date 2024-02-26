@@ -36,6 +36,7 @@ namespace EngineX
         LayerStack m_Layerstack;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
+        float m_LastTimeFrame;
 
     };
 

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "EngineX/Core/Layer.h"
+#include "EngineX/Core/Timestep.h"
 #include "EngineX/Rendering/Buffer.h"
 #include "EngineX/Rendering/Camera.h"
 #include "EngineX/Rendering/Shader.h"
@@ -17,10 +18,9 @@ public:
 
     void OnAttach() override;
     void OnDetach() override;
-    void OnUpdate() override;
+    void OnUpdate(EngineX::Timestep deltaTime) override;
     void OnEvent(EngineX::Event& e) override;
     void OnImGuiRender() override;
-    void OnRender() override;
 
 private:
     void MakeDockSpace();

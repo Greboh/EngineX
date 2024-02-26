@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Core.h"
+#include "Timestep.h"
 #include "EngineX/Events/Event.h"
 
 namespace EngineX
@@ -21,12 +22,10 @@ namespace EngineX
          * \brief Called when removing a layer from the layer-stack
          */
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep deltaTime) {}
         virtual void OnEvent(Event& e) {}
         virtual void OnImGuiRender() {}
-
-        virtual void OnRender() {}
-
+        
         inline const std::string& GetName() const {return m_DebugName; }
 
     protected:
