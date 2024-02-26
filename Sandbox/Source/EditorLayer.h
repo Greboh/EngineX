@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "EngineX/Core/Layer.h"
 #include "EngineX/Rendering/Buffer.h"
+#include "EngineX/Rendering/Camera.h"
 #include "EngineX/Rendering/Shader.h"
 #include "EngineX/Rendering/Render.h"
 #include "EngineX/Rendering/Texture.h"
@@ -34,16 +35,18 @@ private:
     EngineX::Ref<EngineX::Texture2D> m_Texture;
     
     EngineX::Ref<EngineX::VertexBuffer> m_VertexBuffer;
+
+    
     EngineX::Ref<EngineX::IndexBuffer> m_IndexBuffer;
     EngineX::Ref<EngineX::VertexArray> m_VertexArray;
 
-    glm::vec3 m_TransformCoords = glm::vec3(0.0f, 0.0f, -5.0f);
-    glm::vec3 m_RotationRadians = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::mat4 m_RotationMatrix;
-    
-    glm::mat4 m_Model = glm::mat4(1.0f);
-    glm::mat4 m_View = glm::mat4(1.0f);
-    glm::mat4 m_Projection;
+    EngineX::Camera m_Camera;
+
+    glm::mat4 m_ModelTransform = glm::mat4(1.0f);
+    glm::vec3 m_ModelTransformPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 m_ModelTransformRotationRate = glm::vec3(40.0f, 40.0f, 0.0f);
+    glm::vec3 m_ModelTransformScale = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec4 m_ModelAdditionalColor = {0.25f, 0.25f, 0.25f, 1.0f};
 
     EngineX::RenderAPI::BufferClearFlags m_ClearFlags;
 };

@@ -7,9 +7,6 @@
 #include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
 #include "EngineX/ImGui/ImGuiLayer.h"
-#include "EngineX/Rendering/Buffer.h"
-#include "EngineX/Rendering/Shader.h"
-#include "EngineX/Rendering/VertexArray.h"
 
 namespace EngineX
 {
@@ -36,15 +33,10 @@ namespace EngineX
         
         // Unique because only this class should own the window!
         Scope<Window> m_Window;
+        LayerStack m_Layerstack;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
 
-        LayerStack m_Layerstack;
-        
-        Ref<Shader> m_Shader;
-        Ref<VertexBuffer> m_VertexBuffer;
-        Ref<IndexBuffer> m_IndexBuffer;
-        Ref<VertexArray> m_VertexArray;
     };
 
     // To be defined in CLIENT
