@@ -27,10 +27,9 @@ project "Sandbox"
         "ASSETS_DIR=\"%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}/Source/Assets/\""
    }
 
-   postbuildcommands
+   postbuildcommands 
     {
-        "{COPY} C:/Workbase/EngineX/Sandbox/Source/Assets " ..
-        "C:/Workbase/EngineX/bin/" .. OutputDir .. "/%{prj.name}/Source/Assets/"
+        ("xcopy /Q /E /Y /I \"%{wks.location}/Sandbox/Source/Assets\" \"%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}/Source/Assets/\" > nul")
     }
 
 

@@ -38,7 +38,7 @@ namespace EngineX
     void EditorCamera::OnUpdate(Timestep deltaTime)
     {
         // TODO: The camera currently always rotates as if its up direction is world up.
-        // This means if the cameras up direction is -1.0f the yaw rotation is inverted! 
+        // This means if the cameras up direction is -1.0f the yaw rotation is inverted!
         
         const glm::vec2& mouse{InputManager::GetMouseX(), InputManager::GetMouseY()};
 
@@ -49,11 +49,11 @@ namespace EngineX
         // TODO: Refactor this to Mouse Sensitivity * Camera Speed
         const float speed = 2.0f;
         const float rotationSpeed = 0.55f;
-        
+
         // Input to control the camera
         if (InputManager::IsMouseButtonPressed(Mouse::RightClick) && !InputManager::IsKeyPressed(Key::LeftAlt))
         {
-            m_CameraMode = CameraMode::FLY;
+            m_CameraMode = m_CameraOverideMode == CameraMode::FPS ? CameraMode::FPS : CameraMode::FLY;
 
             // NOTE: In order to move smoothly we calculate everything in steps that gets added onto our actual value
             // NOTE: This adds the benefit of being able to manipulate the steps without directly affecting the actual value
@@ -75,7 +75,7 @@ namespace EngineX
             const float distanceStep = distance(m_FocusPoint, m_Position);
             m_FocusPoint = m_Position + GetForwardDirection() * distanceStep;
             m_DistanceToFocus = distanceStep;
-            
+
             m_YawStep += GetWorldUpDirection().y * mouseStep.x * rotationSpeed;
             m_PitchStep += mouseStep.y * rotationSpeed;
         }

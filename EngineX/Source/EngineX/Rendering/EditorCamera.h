@@ -13,7 +13,7 @@ namespace EngineX
     enum class CameraMode
     {
         FLY,
-        FPS,
+        FPS,  // TODO: Temporary .. FPS Mode is only for the school project anyways.
         FOCUS
     };
     
@@ -44,16 +44,17 @@ namespace EngineX
         inline const glm::mat4& GetViewProjection() const { return m_ProjectionMatrix * m_ViewMatrix; }
 
         inline const float& GetFOV() const { return m_VerticalFOV; }
-        inline void SetFOV(const float& fov) { m_VerticalFOV = fov, RefreshProjectionMatrix(); }
+        inline void SetFOV(const float& fov) { m_VerticalFOV = fov; RefreshProjectionMatrix(); }
 
         float GetNearClip() const { return m_NearClip; }
-        inline void SetNearClip(const float& nearP) { m_NearClip = nearP, RefreshProjectionMatrix(); }
+        inline void SetNearClip(const float& nearP) { m_NearClip = nearP; RefreshProjectionMatrix(); }
 
         float GetFarClip() const { return m_FarClip; }
-        inline void SetFarClip(const float& farP) { m_FarClip = farP, RefreshProjectionMatrix(); }
+        inline void SetFarClip(const float& farP) { m_FarClip = farP; RefreshProjectionMatrix(); }
 
         CameraMode GetCameraMode() const { return m_CameraMode; }
-        inline void SetCameraMode (const CameraMode& mode) { m_CameraMode = mode; }
+
+        inline void SetCameraMode (const CameraMode& mode) { m_CameraMode = mode; m_CameraOverideMode = m_CameraMode; }
 
         glm::vec3 GetWorldUpDirection() const;
         glm::vec3 GetUpDirection() const;
@@ -87,6 +88,7 @@ namespace EngineX
         glm::vec2 m_MousePosition;
 
         CameraMode m_CameraMode;
+        CameraMode m_CameraOverideMode;
         
         float m_DistanceToFocus;
 
