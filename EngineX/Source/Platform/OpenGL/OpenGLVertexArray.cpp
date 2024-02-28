@@ -54,7 +54,6 @@ namespace EngineX
 
         for (const auto& element : layout)
         {
-            // This enables the vertex attribute array at index 0 (position attribute).
             glEnableVertexAttribArray(elementIndex);
             
             glVertexAttribPointer

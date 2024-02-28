@@ -1,6 +1,7 @@
 ﻿#include "enxpch.h"
 #include "Render.h"
 
+#include "EditorCamera.h"
 #include "RenderCommand.h"
 
 namespace EngineX
@@ -9,9 +10,9 @@ namespace EngineX
     
     bool m_LoggedOnce = false;
 
-    void Render::BeginScene(Camera& camera)
+    void Render::BeginScene(EditorCamera& camera)
     {
-        m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+        // m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
         
         if (m_LoggedOnce)
         {

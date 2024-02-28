@@ -7,6 +7,7 @@
 #include "EngineX/Core/Application.h"
 #include "EngineX/Core/InputManager.h"
 #include "EngineX/Rendering/RenderCommand.h"
+#include "EngineX/Rendering/Render.h"
 
 
 static bool s_showConsole = true;
@@ -15,47 +16,48 @@ static bool s_ObjectManipulationPanel = true;
 static bool s_showDemo = false;
 
 EditorLayer::EditorLayer()
-    : Layer("EditorLayer"), m_Camera(90.0f, 1980.0f / 1080.0f, 0.1f, 100.0f)
+    : Layer("EditorLayer"), m_Camera(60.0f, 1980.0f, 1080.0f, 0.1f, 100.0f)
 {
     m_VertexArray.reset(EngineX::VertexArray::Create());
 
-    float vertices[24 * 9] =
+    // NOTE: Non-Shared vertices
+    float vertices[36 * 9] =
     {
         // front
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 0
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 1
-        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 2
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 3
-
-        // top
-        -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 4
-        0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 5
-        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 6
-        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 7
-
-        // left
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 8
-        -0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 9
-        -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 10
-        -0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 11
-
-        // right
-        0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 12
-        0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 13
-        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 14
-        0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.2f, 0.2f, 0.6f, 1.0f, // 15
-
-        // back
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 16
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 17
-        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 18
-        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.6f, 0.2f, 0.2f, 1.0f, // 19
-
-        // // bottom
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 20
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 21
-        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 22
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.2f, 0.6f, 0.2f, 1.0f, // 23
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 0
+        0.5f, -0.5f, -0.5f,     1.0f, 0.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 1
+        0.5f, 0.5f, -0.5f,      1.0f, 1.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 2
+        -0.5f, 0.5f, -0.5f,     0.0f, 1.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 3
+                                                
+        // top                                  
+        -0.5f, 0.5f, -0.5f,     0.0f, 0.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 4
+        0.5f, 0.5f, -0.5f,      1.0f, 0.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 5
+        0.5f, 0.5f, 0.5f,       1.0f, 1.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 6
+        -0.5f, 0.5f, 0.5f,      0.0f, 1.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 7
+                                                
+        // left                                 
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 8
+        -0.5f, 0.5f, -0.5f,     1.0f, 0.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 9
+        -0.5f, 0.5f, 0.5f,      1.0f, 1.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 10
+        -0.5f, -0.5f, 0.5f,     0.0f, 1.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 11
+                                                
+        // right                                
+        0.5f, -0.5f, -0.5f,     0.0f, 0.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 12
+        0.5f, 0.5f, -0.5f,      1.0f, 0.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 13
+        0.5f, 0.5f, 0.5f,       1.0f, 1.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 14
+        0.5f, -0.5f, 0.5f,      0.0f, 1.0f,     0.2f, 0.2f, 0.6f, 1.0f, // 15
+                                                
+        // back                                 
+        -0.5f, -0.5f, 0.5f,     0.0f, 0.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 16
+        0.5f, -0.5f, 0.5f,      1.0f, 0.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 17
+        0.5f, 0.5f, 0.5f,       1.0f, 1.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 18
+        -0.5f, 0.5f, 0.5f,      0.0f, 1.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 19
+                                                
+        // // bottom                            
+        -0.5f, -0.5f, 0.5f,     0.0f, 0.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 20
+        0.5f, -0.5f, 0.5f,      1.0f, 0.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 21
+        0.5f, -0.5f, -0.5f,     1.0f, 1.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 22
+        -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,     0.2f, 0.6f, 0.2f, 1.0f, // 23
     };
 
     m_VertexBuffer.reset(EngineX::VertexBuffer::Create(sizeof(vertices), vertices));
@@ -129,15 +131,13 @@ void EditorLayer::OnUpdate(EngineX::Timestep deltaTime)
     EngineX::RenderCommand::Clear(m_ClearFlags);
 
     const auto modelRotationMatrix =
-        rotate(glm::mat4(1.0f), glm::radians(m_ModelTransformRotationRate.x), glm::vec3(1.0f, 0.0f, 0.0f))
-        * rotate(glm::mat4(1.0f), glm::radians(m_ModelTransformRotationRate.y), glm::vec3(0.0f, 1.0f, 0.0f))
-        * rotate(glm::mat4(1.0f), glm::radians(m_ModelTransformRotationRate.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        rotate(glm::mat4(1.0f), glm::radians(m_ModelTransformRotation.x), glm::vec3(1.0f, 0.0f, 0.0f))
+        * rotate(glm::mat4(1.0f), glm::radians(m_ModelTransformRotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
+        * rotate(glm::mat4(1.0f), glm::radians(m_ModelTransformRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
     const auto modelScaleMatrix = scale(glm::mat4(1.0f), m_ModelTransformScale);
 
     m_ModelTransform = translate(glm::mat4(1), m_ModelTransformPosition) * modelRotationMatrix * modelScaleMatrix;
-
-    auto modelViewProjection = m_Camera.GetViewProjectionMatrix() * m_ModelTransform;
     
     EngineX::Render::BeginScene(m_Camera);
     {
@@ -145,43 +145,13 @@ void EditorLayer::OnUpdate(EngineX::Timestep deltaTime)
         m_Texture->Bind();
         m_Shader->UploadUniform("u_Texture", 0);
         m_Shader->UploadUniform("u_ExtraColor", m_ModelAdditionalColor);
-        m_Shader->UploadUniform("u_ModelViewProjection", modelViewProjection);
+        m_Shader->UploadUniform("u_ModelViewProjection", m_Camera.GetViewProjection() * m_ModelTransform);
 
         EngineX::Render::Submit(m_VertexArray, m_Shader);
     }
     EngineX::Render::EndScene();
     
-    auto movementModifiers = glm::vec3(0.0f, 0.0f, 0.0f);
-
-    if (EngineX::InputManager::IsMouseButtonPressed(EngineX::Mouse::Button1))
-    {
-        if (EngineX::InputManager::IsKeyPressed(EngineX::Key::A))
-        {
-            movementModifiers.x += 1.0f * deltaTime;
-        }
-        if (EngineX::InputManager::IsKeyPressed(EngineX::Key::D))
-        {
-            movementModifiers.x -= 1.0f * deltaTime;
-        }
-        if (EngineX::InputManager::IsKeyPressed(EngineX::Key::E))
-        {
-            movementModifiers.y -= 1.0f * deltaTime;
-        }
-        if (EngineX::InputManager::IsKeyPressed(EngineX::Key::Q))
-        {
-            movementModifiers.y += 1.0f * deltaTime;
-        }
-        if (EngineX::InputManager::IsKeyPressed(EngineX::Key::W))
-        {
-            movementModifiers.z += 1.0f * deltaTime;
-        }
-        if (EngineX::InputManager::IsKeyPressed(EngineX::Key::S))
-        {
-            movementModifiers.z -= 1.0f * deltaTime;
-        }
-    }
-
-    m_Camera.SetPosition(m_Camera.GetPosition() - movementModifiers);
+    m_Camera.OnUpdate(deltaTime);
 }
 
 void EditorLayer::OnImGuiRender()
@@ -360,7 +330,7 @@ void EditorLayer::ObjectManipulationPanel(bool* open)
                 if (ImGui::Button("Reset"))
                 {
                     m_ModelTransformPosition = {0.0f, 0.0f, 0.0f};
-                    m_ModelTransformRotationRate = {0.0f, 0.0f, 0.0f};
+                    m_ModelTransformRotation = {0.0f, 0.0f, 0.0f};
                     m_ModelTransformScale = {1.0f, 1.0f, 1.0f};
                     m_ModelAdditionalColor = {0.25f, 0.25f, 0.25f, 1.0f};
                 }
@@ -410,21 +380,21 @@ void EditorLayer::ObjectManipulationPanel(bool* open)
                     ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
                     ImGui::Text("X:");
                     ImGui::SameLine(); // Move next item to the same line
-                    ImGui::DragFloat("##RotationX", &m_ModelTransformRotationRate.x, 1.0f, -360.0f, 360.0f);
+                    ImGui::DragFloat("##RotationX", &m_ModelTransformRotation.x, 1.0f, -360.0f, 360.0f);
                     // Drag input for X coordinate
                     ImGui::NextColumn();
 
                     ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
                     ImGui::Text("Y:");
                     ImGui::SameLine(); // Move next item to the same line
-                    ImGui::DragFloat("##RotationY", &m_ModelTransformRotationRate.y, 1.0f, -360.0f, 360.0f);
+                    ImGui::DragFloat("##RotationY", &m_ModelTransformRotation.y, 1.0f, -360.0f, 360.0f);
                     // Drag input for X coordinate
                     ImGui::NextColumn();
 
                     ImGui::AlignTextToFramePadding(); // Align text to top of frame padding
                     ImGui::Text("Z:");
                     ImGui::SameLine(); // Move next item to the same line
-                    ImGui::DragFloat("##RotationZ", &m_ModelTransformRotationRate.z, 1.0f, -360.0f, 360.0f);
+                    ImGui::DragFloat("##RotationZ", &m_ModelTransformRotation.z, 1.0f, -360.0f, 360.0f);
                     // Drag input for X coordinate
 
                     ImGui::Columns();
@@ -508,17 +478,77 @@ void EditorLayer::ObjectManipulationPanel(bool* open)
                 // Clipping planes
                 {
                     ImGui::CustomSpacing(ImVec2(0.0f, 5.0f)); // Add a separator for visual clarity
-                    float clippingPlanes[2] = {m_Camera.GetClippingPlanes().x, m_Camera.GetClippingPlanes().y};
+                    float clippingPlanes[2] = {m_Camera.GetNearClip(), m_Camera.GetFarClip()};
 
                     ImGui::Text("Clipping planes:");
                     ImGui::SliderFloat2("##clippingplanes", clippingPlanes, 0.1f, 100.0f, "%.1f");
 
-                    if (fabs(m_Camera.GetClippingPlanes().x - clippingPlanes[0]) > 0.00001f
-                        || fabs(m_Camera.GetClippingPlanes().y - clippingPlanes[1]) > 0.00001f)
+                    if (fabs(m_Camera.GetNearClip() - clippingPlanes[0]) > 0.00001f
+                        || fabs(m_Camera.GetFarClip() - clippingPlanes[1]) > 0.00001f)
                     {
-                        m_Camera.SetClippingPlanes(glm::vec2(clippingPlanes[0], clippingPlanes[1]));
+                        m_Camera.SetNearClip(clippingPlanes[0]);
+                        m_Camera.SetFarClip(clippingPlanes[1]);
                     }
                 }
+
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
+
+                // NOTE: C++ doesn't have TEnum.ToString ...
+                auto currentCameraMode = "";
+                switch (m_Camera.GetCameraMode())
+                {
+                case EngineX::CameraMode::FLY:
+                    currentCameraMode = "Free";
+                    break;
+                case EngineX::CameraMode::FPS:
+                    currentCameraMode = "FPS";
+                    break;
+                case EngineX::CameraMode::FOCUS:
+                    currentCameraMode = "Focus";
+                    break;
+                }
+
+                ImGui::Columns(2);
+                ImGui::Text("CameraMode");
+                ImGui::NextColumn();
+                if (ImGui::BeginCombo("##mode", currentCameraMode,
+                                      ImGuiComboFlags_NoArrowButton | ImGuiComboFlags_PopupAlignLeft))
+                {
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        auto mode = static_cast<EngineX::CameraMode>(i);
+                        bool isSelected = (mode == m_Camera.GetCameraMode());
+                        auto modeName = "";
+
+                        switch (mode)
+                        {
+                        case EngineX::CameraMode::FLY:
+                            modeName = "Free";
+                            break;
+                        case EngineX::CameraMode::FPS:
+                            modeName = "FPS";
+                            break;
+                        case EngineX::CameraMode::FOCUS:
+                            modeName = "Focus";
+                            break;
+                        }
+
+                        if (ImGui::Selectable(modeName, isSelected))
+                        {
+                            // Set the selected camera mode
+                            m_Camera.SetCameraMode(mode);
+                        }
+
+                        if (isSelected)
+                        {
+                            // Set the initial focus on the currently selected item
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+
+                    ImGui::EndCombo();
+                }
+                ImGui::Columns();
 
                 ImGui::TreePop();
             }
@@ -527,79 +557,67 @@ void EditorLayer::ObjectManipulationPanel(bool* open)
 
             if (ImGui::TreeNode("Transform [READ-ONLY]"))
             {
-                // Position
-                {
-                    auto position = m_Camera.GetPosition();
+                DisplayVec3Control("Position", m_Camera.GetPosition(), 1.0f, FLT_MIN, FLT_MAX, "%.1f",
+                                   ImGuiInputTextFlags_ReadOnly);
 
-                    // Add a separator for visual clarity
-                    ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
 
-                    ImGui::Columns(4);
-
-                    // Align text to top of frame padding
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("Position:");
-                    ImGui::NextColumn();
+                DisplayVec3Control("Rotation", "Pitch", "Yaw", "Roll",
+                                   glm::vec3(glm::degrees(m_Camera.GetPitch()), glm::degrees(m_Camera.GetYaw()), 0.0f),
+                                   1.0f, FLT_MIN, FLT_MAX, "%.1f", ImGuiInputTextFlags_ReadOnly);
 
 
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("X:");
-                    ImGui::SameLine();
-                    ImGui::DragFloat("##PositionX", &position.x, 0.1f, FLT_MIN, FLT_MAX, "%.1f",
-                                     ImGuiInputTextFlags_ReadOnly); // Drag input for X coordinate
-                    ImGui::NextColumn();
+                ImGui::TreePop();
+            }
 
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("Y:");
-                    ImGui::SameLine();
-                    ImGui::DragFloat("##PositionY", &position.y, 0.1f, FLT_MIN, FLT_MAX, "%.1f",
-                                     ImGuiInputTextFlags_ReadOnly); // Drag input for X coordinate
-                    ImGui::NextColumn();
+            ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
 
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("Z:");
-                    ImGui::SameLine();
-                    ImGui::DragFloat("##PositionZ", &position.z, 0.1f, FLT_MIN, FLT_MAX, "%.1f",
-                                     ImGuiInputTextFlags_ReadOnly);
+            if (ImGui::TreeNode("Misc [READ-ONLY]"))
+            {
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
 
-                    ImGui::Columns();
-                }
+                ImGui::Text("Focus Point: x:%.1f, y:%.1f, z:%.1f", m_Camera.GetFocusPoint().x,
+                            m_Camera.GetFocusPoint().y, m_Camera.GetFocusPoint().z);
+                
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
+                
+                ImGui::Text("Direction: x:%.1f, y:%.1f, z:%.1f", m_Camera.GetDirection().x,
+                            m_Camera.GetDirection().y, m_Camera.GetDirection().z);
+                
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
+                
+                ImGui::Text("Distance: %.1f", m_Camera.GetDistance());
 
-                // Rotation
-                {
-                    auto rotationAngle = m_Camera.GetRotationAngle();
 
-                    ImGui::CustomSpacing(ImVec2(0.0f, 5.0f)); // Add a separator for visual clarity
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
+                
+                ImGui::Text("Up Direction: x:%.1f, y:%.1f, z:%.1f", m_Camera.GetUpDirection().x,
+                            m_Camera.GetUpDirection().y, m_Camera.GetUpDirection().z);
 
-                    ImGui::Columns(4);
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
 
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("Rotation:");
-                    ImGui::NextColumn();
+                ImGui::Text("Forward Direction: x:%.1f, y:%.1f, z:%.1f", m_Camera.GetRightDirection().x,
+                            m_Camera.GetRightDirection().y, m_Camera.GetRightDirection().z);
 
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("X:");
-                    ImGui::SameLine();
-                    ImGui::DragFloat("##RotationX", &rotationAngle.x, 1.0f, 0.0f, 360.0f, "%.0f",
-                                     ImGuiInputTextFlags_ReadOnly);
-                    ImGui::NextColumn();
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
 
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("Y:");
-                    ImGui::SameLine();
-                    ImGui::DragFloat("##RotationY", &rotationAngle.y, 1.0f, 0.0f, 360.0f, "%.0f",
-                                     ImGuiInputTextFlags_ReadOnly);
-                    ImGui::NextColumn();
+                ImGui::Text("Right Direction: x:%.1f, y:%.1f, z:%.1f", m_Camera.GetForwardDirection().x,
+                            m_Camera.GetForwardDirection().y, m_Camera.GetForwardDirection().z);
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
 
-                    ImGui::AlignTextToFramePadding();
-                    ImGui::Text("Z:");
-                    ImGui::SameLine();
-                    ImGui::DragFloat("##RotationZ", &rotationAngle.z, 1.0f, 0.0f, 360.0f, "%.0f",
-                                     ImGuiInputTextFlags_ReadOnly);
+                ImGui::Text("Mouse Position: x:%.1f, y:%.1f", m_Camera.GetMousePosition().x,
+                            m_Camera.GetMousePosition().y);
+                ImGui::CustomSpacing(ImVec2(0.0f, 5.0f));
 
-                    ImGui::Columns();
-                }
-
+                ImGui::Text(fmt::format("View matrix: [{}, {}, {}, {}]", m_Camera.GetView()[0].x,
+                                        m_Camera.GetView()[0].y, m_Camera.GetView()[0].z,
+                                        m_Camera.GetView()[0].w).c_str());
+                ImGui::Text(fmt::format("		      [{}, {}, {}, {}]", m_Camera.GetView()[1].x, m_Camera.GetView()[1].y,
+                                        m_Camera.GetView()[1].z, m_Camera.GetView()[1].w).c_str());
+                ImGui::Text(fmt::format("		      [{}, {}, {}, {}]", m_Camera.GetView()[2].x, m_Camera.GetView()[2].y,
+                                        m_Camera.GetView()[2].z, m_Camera.GetView()[2].w).c_str());
+                ImGui::Text(fmt::format("		      [{}, {}, {}, {}]", m_Camera.GetView()[3].x, m_Camera.GetView()[3].y,
+                                        m_Camera.GetView()[3].z, m_Camera.GetView()[3].w).c_str());
                 ImGui::TreePop();
             }
 

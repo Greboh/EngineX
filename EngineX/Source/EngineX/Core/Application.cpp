@@ -47,6 +47,7 @@ namespace EngineX
         {
             // NOTE: Currently we are updating our layers first and then our window .. Might change in the future
 
+            // Updates DeltaTime
             const float time = static_cast<float>(glfwGetTime());
             const Timestep deltaTime = time - m_LastTimeFrame;
             m_LastTimeFrame = time;

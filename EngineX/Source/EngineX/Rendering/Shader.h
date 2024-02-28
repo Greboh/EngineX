@@ -7,8 +7,6 @@
 #include <glm/mat3x3.hpp>
 #include <glm/mat4x4.hpp>
 
-#include "RenderAPI.h"
-
 namespace EngineX
 {
     struct ShaderProgramSource {
@@ -51,9 +49,6 @@ namespace EngineX
         virtual void UploadUniform(const std::string& name, const glm::vec4& value) = 0;
         virtual void UploadUniform(const std::string& name, const glm::mat3& value) = 0;
         virtual void UploadUniform(const std::string& name, const glm::mat4& value) = 0;
-
-    private:
-        RenderID m_RendererID;
     };
 
     

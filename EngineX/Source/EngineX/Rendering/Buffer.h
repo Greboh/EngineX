@@ -49,7 +49,7 @@ namespace EngineX
         uint32_t Offset;
         bool Normalized;
 
-        BufferElement() {};
+        BufferElement() = default;
 
         BufferElement(const ShaderDataType& type, const std::string& name, bool normalized = false)
             : Name(name),
@@ -91,6 +91,7 @@ namespace EngineX
 
     };
 
+    
     class BufferLayout
     {
     public:
@@ -156,9 +157,7 @@ namespace EngineX
         virtual void SetLayout(const BufferLayout& layout) = 0;
 
     };
-
     
-
     /**
      * \brief Abstract class. Each API needs to implement this. Creates a IndexBuffer
      */

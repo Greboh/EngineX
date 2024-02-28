@@ -26,7 +26,7 @@
 #include "EngineX/Rendering/Shader.h"
 #include "EngineX/Rendering/Texture.h"
 #include "EngineX/Rendering/VertexArray.h"
-#include "EngineX/Rendering/Camera.h"
+#include "EngineX/Rendering/EditorCamera.h"
 
 
 

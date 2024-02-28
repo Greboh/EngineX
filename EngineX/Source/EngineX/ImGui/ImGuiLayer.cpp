@@ -29,8 +29,8 @@ namespace EngineX
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         // Setup ImGui Style
-        ImGui::StyleColorsDark();
-
+        ImGui::StyleColorsClassic();
+        
         // Tweak WindowRounding/WindowBackground when viewports are enabled
         // so platform windows can look identical to regular ones
         ImGuiStyle& style = ImGui::GetStyle();
