@@ -4,10 +4,17 @@
 
 1. **Cloning the Repository**: To properly clone the repository, you have two options:
     - Download the full files from GitHub.
-    - Use the following command in your command-line interface:
+    - Use one of the the following commands in your command-line interface:
+    
+      If you want the main branch
         ```
-        git clone --recursive [git-url] 
+        git clone --recursive https://github.com/Greboh/EngineX
         ```
+      If you want another branch than main
+        ```
+        git clone -[branch] --recursive https://github.com/Greboh/EngineX
+        ```
+
 
 2. **Running Setup Script**: Navigate to the `EngineX` directory, then proceed to `Scripts`, and execute the `Setup` script.
 
@@ -36,7 +43,5 @@ In this section, I'll outline the libraries utilized in this project and the rea
 - **Library**: [GLFW](https://github.com/glfw/glfw)
 - **Description**: GLFW was selected for its cross-platform compatibility and robust input handling capabilities. The decision was influenced by its comprehensive documentation and widespread adoption within the industry.
 
-## Graphics
-- **Status**: Currently, no graphics rendering is implemented in the project.
-- **Considerations**: Future plans involve exploring technologies such as Vulkan, supported by GLFW, and potentially DirectX. The aim is to ideally leverage both technologies ideally for enhanced graphics rendering capabilities.
-
+## Graphics API
+- **Status**: Currently, there is a basic implementation of OpenGL. Further down the line i want to properly fully swap over to Vulkan and potentially support DirectX.
