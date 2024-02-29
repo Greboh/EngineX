@@ -9,7 +9,6 @@
 #include "EngineX/Rendering/RenderCommand.h"
 #include "EngineX/Rendering/Render.h"
 
-
 static bool s_showConsole = true;
 static bool s_DebuggerPanel = true;
 static bool s_ObjectManipulationPanel = true;
@@ -23,6 +22,7 @@ EditorLayer::EditorLayer()
     // NOTE: Non-Shared vertices
     float vertices[36 * 9] =
     {
+        //    Position             UV                     Color 
         // front
         -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 0
         0.5f, -0.5f, -0.5f,     1.0f, 0.0f,     0.6f, 0.2f, 0.2f, 1.0f, // 1
@@ -64,15 +64,15 @@ EditorLayer::EditorLayer()
 
     m_VertexBuffer->SetLayout
     ({
-        {EngineX::ShaderDataType::Float3, "a_Position"},
-        {EngineX::ShaderDataType::Float2, "a_Texture"},
-        {EngineX::ShaderDataType::Float4, "a_Color"},
+        {EngineX::ShaderDataType::Float3, "a_Position"},    // Index 0
+        {EngineX::ShaderDataType::Float2, "a_Texture"},     // Index 1
+        {EngineX::ShaderDataType::Float4, "a_Color"},       // Index 2
     });
 
     m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
     // Define the indices for indexed rendering
-    // These indices specify the order in which vertices are used to form primitives (e.g., triangles).
+    // These indices specify the order in which vertices are used to form primitives (e.g., cubesd).
     uint32_t indices[36] =
     {
         // front
@@ -145,6 +145,8 @@ void EditorLayer::OnUpdate(EngineX::Timestep deltaTime)
         m_Texture->Bind();
         m_Shader->UploadUniform("u_Texture", 0);
         m_Shader->UploadUniform("u_ExtraColor", m_ModelAdditionalColor);
+
+        // NOTE: Upload MVP uniform notice its ViewProjection * Model because matrices are multiple right to left!
         m_Shader->UploadUniform("u_ModelViewProjection", m_Camera.GetViewProjection() * m_ModelTransform);
 
         EngineX::Render::Submit(m_VertexArray, m_Shader);
@@ -179,6 +181,7 @@ void EditorLayer::OnImGuiRender()
 
 void EditorLayer::MakeDockSpace()
 {
+    // NOTE: Imported directly from ImGui Example
     // Note: Switch this to true to enable dockspace
     static bool dockspaceOpen = true;
     static bool opt_fullscreen_persistant = true;

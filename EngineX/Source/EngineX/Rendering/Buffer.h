@@ -23,18 +23,18 @@ namespace EngineX
     {
         switch (type)
         {
-        case ShaderDataType::None:          ENX_ENGINE_ASSERT(false, "ShaderDataType None is not supported!") break;
-        case ShaderDataType::Float:         return 4;
-        case ShaderDataType::Float2:        return 4 * 2;
-        case ShaderDataType::Float3:        return 4 * 3;
-        case ShaderDataType::Float4:        return 4 * 4;
-        case ShaderDataType::Matrix3:       return 4 * 3 * 3;
-        case ShaderDataType::Matrix4:       return 4 * 4 * 4;
-        case ShaderDataType::Int:           return 4;
-        case ShaderDataType::Int2:          return 4 * 2;
-        case ShaderDataType::Int3:          return 4 * 3;
-        case ShaderDataType::Int4:          return 4 * 4;
-        case ShaderDataType::Bool:          return 1;
+            case ShaderDataType::None:          ENX_ENGINE_ASSERT(false, "ShaderDataType None is not supported!") break;
+            case ShaderDataType::Float:         return 4;
+            case ShaderDataType::Float2:        return 4 * 2;
+            case ShaderDataType::Float3:        return 4 * 3;
+            case ShaderDataType::Float4:        return 4 * 4;
+            case ShaderDataType::Matrix3:       return 4 * 3 * 3;
+            case ShaderDataType::Matrix4:       return 4 * 4 * 4;
+            case ShaderDataType::Int:           return 4;
+            case ShaderDataType::Int2:          return 4 * 2;
+            case ShaderDataType::Int3:          return 4 * 3;
+            case ShaderDataType::Int4:          return 4 * 4;
+            case ShaderDataType::Bool:          return 1;
         }
 
         ENX_ENGINE_ASSERT(false, "Unknown ShaderDataType!")
@@ -88,9 +88,7 @@ namespace EngineX
             ss << "Name: " << Name << ", Size: " << Size << ", Offset: " << Offset << ", Normalized: " << Normalized <<")";
             return ss.str();
         }
-
     };
-
     
     class BufferLayout
     {
@@ -124,9 +122,9 @@ namespace EngineX
             
             for (auto& element : m_Elements)
             {
+                m_Stride += element.Size;
                 element.Offset = offset;
                 offset += element.Size;
-                m_Stride += element.Size;
             }
         }
         
