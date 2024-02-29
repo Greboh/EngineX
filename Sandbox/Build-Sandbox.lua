@@ -4,21 +4,34 @@ project "Sandbox"
    cppdialect "C++20"
    staticruntime "on"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { "Source/**.h", "Source/**.cpp", "Source/Assets/**" }
 
    includedirs
    {
       "Source",
+      "Source/Assets",
+      "%{wks.location}/EngineX/Source",
       "%{wks.location}/EngineX/vendor/spdlog/include",
       "%{wks.location}/EngineX/vendor/ImGui",
       "%{wks.location}/EngineX/vendor/glm",
-      "%{wks.location}/EngineX/Source",
+      "%{wks.location}/EngineX/vendor/stb_image"
    }
 
    links
    {
       "EngineX"
    }
+
+   defines
+   {
+        "ASSETS_DIR=\"%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}/Source/Assets/\""
+   }
+
+   postbuildcommands 
+    {
+        ("xcopy /Q /E /Y /I \"%{wks.location}/Sandbox/Source/Assets\" \"%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}/Source/Assets/\" > nul")
+    }
+
 
    targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
    objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")

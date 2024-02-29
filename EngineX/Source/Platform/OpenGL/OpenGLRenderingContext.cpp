@@ -1,10 +1,10 @@
 ﻿#include "enxpch.h"
 #include "OpenGLRenderingContext.h"
 
-#include "EngineX/Core/Core.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include "EngineX/Core/Core.h"
 
 namespace EngineX
 {

@@ -20,9 +20,9 @@ namespace EngineX
             Button7 = 7,
 
             ButtonLast = Button7,
-            ButtonLeft = Button0,
-            ButtonRight = Button1,
-            ButtonMiddle = Button2
+            LeftClick = Button0,
+            RightClick = Button1,
+            MouseWheelClick = Button2
         };
     }
 }

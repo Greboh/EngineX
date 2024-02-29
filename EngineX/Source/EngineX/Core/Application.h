@@ -7,9 +7,6 @@
 #include "EngineX/Events/Event.h"
 #include "EngineX/Events/ApplicationEvent.h"
 #include "EngineX/ImGui/ImGuiLayer.h"
-#include "EngineX/Core/Rendering/Buffer.h"
-#include "EngineX/Core/Rendering/Shader.h"
-#include "EngineX/Core/Rendering/VertexArray.h"
 
 namespace EngineX
 {
@@ -26,7 +23,7 @@ namespace EngineX
         void InsertLayer(Layer* layer);
         void InsertOverlay(Layer* layer);
 
-        inline static Application& Get() {return *s_Instance; }
+        inline static Application& GetInstance() {return *s_Instance; }
         inline Window& GetWindow() const { return *m_Window; }
         
     private:
@@ -36,15 +33,11 @@ namespace EngineX
         
         // Unique because only this class should own the window!
         Scope<Window> m_Window;
+        LayerStack m_Layerstack;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
+        float m_LastTimeFrame;
 
-        LayerStack m_Layerstack;
-        
-        Ref<Shader> m_Shader;
-        Ref<VertexBuffer> m_VertexBuffer;
-        Ref<IndexBuffer> m_IndexBuffer;
-        Ref<VertexArray> m_VertexArray;
     };
 
     // To be defined in CLIENT

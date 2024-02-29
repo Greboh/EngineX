@@ -4,7 +4,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "EngineX/Core/Rendering/RenderingContext.h"
+#include "EngineX/Rendering/RenderingContext.h"
 
 namespace EngineX
 {

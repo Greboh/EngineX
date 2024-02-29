@@ -1,8 +1,6 @@
 ﻿#include "enxpch.h"
 #include "OpenGLRenderAPI.h"
 
-#include <glad/glad.h>
-
 namespace EngineX
 {
     void OpenGLRenderAPI::SetClearColor(const glm::vec4& color)
@@ -10,9 +8,19 @@ namespace EngineX
         glClearColor(color.r, color.g, color.b, color.a);
     }
 
-    void OpenGLRenderAPI::Clear()
+    void OpenGLRenderAPI::Clear(const BufferClearFlags flags) const
     {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        GLbitfield mask = 0;
+
+        for (auto& pair : m_flagMap)
+        {
+            if (static_cast<int>(flags) & static_cast<int>(pair.first))
+            {
+                mask |= pair.second;
+            }
+        }
+        
+        glClear(mask);
     }
 
     void OpenGLRenderAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
@@ -25,5 +33,6 @@ namespace EngineX
             GL_UNSIGNED_INT,
             nullptr
         );
+        
     }
 }

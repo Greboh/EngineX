@@ -48,6 +48,6 @@ namespace EngineX
          */
         virtual void* GetBaseWindow() const = 0;
 
-        static Window* Create(const WindowBaseVars & props = WindowBaseVars());
+        static Window* Create(const WindowBaseVars& props = WindowBaseVars());
     };
 }

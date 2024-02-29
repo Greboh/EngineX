@@ -27,7 +27,6 @@ namespace EngineX
 
     void ImGuiConsole::Draw(const char* title, bool* p_open, ImGuiWindowFlags flags)
     {
-        
         if (!ImGui::Begin(title, p_open, flags))
         {
             ImGui::End();
@@ -148,9 +147,7 @@ namespace EngineX
             
                         // Display the line
                         ImGui::TextUnformatted(line_start, line_end);
-
-                    
-            
+                        
                         // Pop the text color
                         ImGui::PopStyleColor();
                             

@@ -195,7 +195,7 @@ namespace EngineX
         const int useVSync = enabled ? 1 : 0;
 
         glfwSwapInterval(useVSync);
-
+        
         m_Data.VSync = enabled;
     }
 

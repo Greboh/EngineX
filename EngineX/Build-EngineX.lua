@@ -13,7 +13,7 @@ project "EngineX"
  -- Specify the source file that includes the PCH header
     pchsource "Source/enxpch.cpp"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { "Source/**.h", "Source/**.cpp", "vendor/stb_image/**.h", "vendor/stb_image/**.cpp" }
 
     includedirs
     {
@@ -22,7 +22,8 @@ project "EngineX"
             "%{IncludeDir.Glad}",
             "%{IncludeDir.ImGui}",
             "%{IncludeDir.glm}",
-            "%{IncludeDir.spdlog}"
+            "%{IncludeDir.spdlog}",
+            "%{IncludeDir.stb_image}"
     }
 
     defines

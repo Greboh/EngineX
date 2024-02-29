@@ -1,7 +1,8 @@
 ﻿#include "enxpch.h"
 
 #include "Application.h"
-#include "Rendering/RenderCommand.h"
+#include "Timestep.h"
+#include "GLFW/glfw3.h"
 
 namespace EngineX
 {
@@ -45,19 +46,25 @@ namespace EngineX
         while (m_Running)
         {
             // NOTE: Currently we are updating our layers first and then our window .. Might change in the future
+
+            // Updates DeltaTime
+            const float time = static_cast<float>(glfwGetTime());
+            const Timestep deltaTime = time - m_LastTimeFrame;
+            m_LastTimeFrame = time;
             
             // Update our layers from first index -> last index
             for (Layer* layer : m_Layerstack)
             {
-                layer->OnRender();
-                layer->OnUpdate();
+                layer->OnUpdate(deltaTime);
             }
 
             m_ImGuiLayer->Begin();
-            for (Layer* layer : m_Layerstack)
             {
-                layer->OnImGuiRender();
-            }
+                for (Layer* layer : m_Layerstack)
+                {
+                    layer->OnImGuiRender();
+                }
+            } 
             m_ImGuiLayer->End();
 
             m_Window->OnUpdate();

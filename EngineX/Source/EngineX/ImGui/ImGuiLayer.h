@@ -4,6 +4,10 @@
 
 namespace EngineX
 {
+    
+    /**
+     * \brief Responsible for initializing all ImGui Layers and handling ImGui frames etc in the background
+     */
     class ImGuiLayer : public Layer
     {
     public:
@@ -15,8 +19,5 @@ namespace EngineX
         void OnImGuiRender() override;
         void Begin();
         void End();
-
-    private:
-        float m_DeltaTime;
     };
 }

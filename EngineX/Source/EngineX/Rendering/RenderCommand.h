@@ -13,9 +13,9 @@ namespace EngineX
             s_RenderAPI->SetClearColor(color);
         }
         
-        inline static void Clear()
+        inline static void Clear(const RenderAPI::BufferClearFlags flags)
         {
-            s_RenderAPI->Clear();
+            s_RenderAPI->Clear(flags);
         }
         
         inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)

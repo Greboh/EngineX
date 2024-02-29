@@ -29,8 +29,8 @@ namespace EngineX
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         // Setup ImGui Style
-        ImGui::StyleColorsDark();
-
+        ImGui::StyleColorsClassic();
+        
         // Tweak WindowRounding/WindowBackground when viewports are enabled
         // so platform windows can look identical to regular ones
         ImGuiStyle& style = ImGui::GetStyle();
@@ -40,7 +40,7 @@ namespace EngineX
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
 
-        Application& app = Application::Get();
+        Application& app = Application::GetInstance();
         GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetBaseWindow());
         
         // Setup Platform / Renderer bindings
@@ -70,7 +70,7 @@ namespace EngineX
     void ImGuiLayer::End()
     {
         ImGuiIO& io = ImGui::GetIO();
-        const Application& app = Application::Get();
+        const Application& app = Application::GetInstance();
 
         const auto[x, y] = ENX_GET_SCREENSIZE(app.GetWindow());        
         io.DisplaySize = ImVec2(static_cast<float>(x), static_cast<float>(y));
