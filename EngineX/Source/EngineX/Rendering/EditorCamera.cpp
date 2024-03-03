@@ -39,7 +39,7 @@ namespace EngineX
     {
         // TODO: The camera currently always rotates as if its up direction is world up.
         // This means if the cameras up direction is -1.0f the yaw rotation is inverted!
-        
+
         const glm::vec2& mouse{InputManager::GetMouseX(), InputManager::GetMouseY()};
 
         // NOTE:: GetMouseX & Y gets the mouse position based on screen resolution (1920 x 1080)
@@ -148,8 +148,12 @@ namespace EngineX
         m_PositionStep *= 0.8f;
     }
 
-    void EditorCamera::OnEvent(Event& event)
+    void EditorCamera::OnEvent(Event& e)
     {
+        EventDispatcher dispatcher(e);
+
+        dispatcher.Dispatch<WindowResizeEvent>(ENX_BIND_EVENT_FN(OnWindowResize));
+
     }
 
     glm::vec3 EditorCamera::GetWorldUpDirection() const
@@ -188,6 +192,16 @@ namespace EngineX
     glm::vec3 EditorCamera::GetPositionRelativeToFocus() const
     {
         return m_FocusPoint - GetForwardDirection() * m_DistanceToFocus + m_PositionStep;
+    }
+
+    bool EditorCamera::OnWindowResize(WindowResizeEvent& e)
+    {
+        m_Viewport = {e.GetWidth(), e.GetHeight()};
+        m_AspectRatio = m_Viewport.x / m_Viewport.y;
+
+        RefreshProjectionMatrix();
+
+        return false;
     }
 
     void EditorCamera::Rotate(float pitch, float yaw)

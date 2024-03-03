@@ -8,6 +8,8 @@ namespace EngineX
     class Render
     {
     public:
+        static void OnWindowResize(uint32_t width, uint32_t height);
+
         static void BeginScene(EditorCamera& camera);
         static void EndScene();
 

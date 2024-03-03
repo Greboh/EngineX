@@ -10,6 +10,11 @@ namespace EngineX
     
     bool m_LoggedOnce = false;
 
+    void Render::OnWindowResize(uint32_t width, uint32_t height)
+    {
+        RenderCommand::SetViewport(0, 0, width, height);
+    }
+
     void Render::BeginScene(EditorCamera& camera)
     {
         // m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();

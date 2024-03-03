@@ -8,13 +8,13 @@ namespace EngineX
     class OpenGLShader : public Shader
     {
     public:
-        OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource);
-        OpenGLShader(const std::string& shaderSource);
+        OpenGLShader(const std::string& name, const std::string& shaderSource);
 
         ~OpenGLShader() override;
         void Bind() const override;
         void Unbind() const override;
         
+        inline std::string GetName() const override { return m_Name; }
         void UploadUniform(const std::string& name, const int& value) override;
         void UploadUniform(const std::string& name, const float& value) override;
         void UploadUniform(const std::string& name, const glm::vec2& value) override;
@@ -29,6 +29,7 @@ namespace EngineX
         GLint GetUniformLocation(const std::string& name) const;
 
         RenderID m_RendererID;
+        std::string m_Name;
 
         // NOTE: Has to be mutable otherwise we are not allowed to change its data.
         mutable std::unordered_map<std::string, GLint> m_UniformCache;

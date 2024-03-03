@@ -4,9 +4,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-
 #include "EngineX/Core/Timestep.h"
 #include "EngineX/Events/Event.h"
+
+#include "EngineX/Events/ApplicationEvent.h"
+
 
 namespace EngineX
 {
@@ -71,6 +73,9 @@ namespace EngineX
         inline void RefreshProjectionMatrix() { m_ProjectionMatrix = glm::perspectiveFov(glm::radians(m_VerticalFOV), m_Viewport.x, m_Viewport.y, m_NearClip, m_FarClip); }
         
         glm::vec3 GetPositionRelativeToFocus() const;
+
+        // Events
+        bool OnWindowResize(WindowResizeEvent& e);
         
         glm::mat4 m_ProjectionMatrix, m_ViewMatrix;
 

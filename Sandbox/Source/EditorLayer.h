@@ -29,13 +29,14 @@ private:
 
     EngineX::Ref<EngineX::ImGuiConsole> m_ImGuiConsole = EngineX::CreateRef<EngineX::ImGuiConsole>();
 
-    EngineX::Ref<EngineX::Shader> m_Shader;
+    EngineX::Ref<EngineX::Shader> m_TextureShader;
     EngineX::Ref<EngineX::Texture2D> m_Texture;
 
     EngineX::Ref<EngineX::VertexBuffer> m_VertexBuffer;
     EngineX::Ref<EngineX::IndexBuffer> m_IndexBuffer;
     EngineX::Ref<EngineX::VertexArray> m_VertexArray;
-
+    EngineX::ShaderLibrary m_ShaderLibrary;
+    
     EngineX::EditorCamera m_Camera;
 
     glm::mat4 m_ModelTransform = glm::mat4(1.0f);

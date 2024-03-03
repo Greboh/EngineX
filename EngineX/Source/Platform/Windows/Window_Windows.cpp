@@ -86,6 +86,8 @@ namespace EngineX
             data.Width = width;
             data.Height = height;
 
+            ENX_ENGINE_INFO("Window Resized! {0}:{1}", width, height);
+            
             // Make the Event 
             WindowResizeEvent event(width, height);
             data.EventCallback(event);

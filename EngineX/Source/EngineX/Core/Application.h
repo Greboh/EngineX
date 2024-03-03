@@ -28,6 +28,7 @@ namespace EngineX
         
     private:
         bool OnWindowClose(WindowCloseEvent& e);
+        bool OnWindowResize(WindowResizeEvent& e);
         
         static Application* s_Instance;
         
@@ -36,6 +37,7 @@ namespace EngineX
         LayerStack m_Layerstack;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
+        bool m_Minimized = false;
         float m_LastTimeFrame;
 
     };

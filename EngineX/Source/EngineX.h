@@ -17,6 +17,8 @@
 #include "EngineX/Core/KeyCodes.h"
 #include "EngineX/Core/MouseCodes.h"
 
+#include "EngineX/Events/ApplicationEvent.h"
+
 #include "EngineX/ImGui/ImGuiLayer.h"
 
 #include "EngineX/Rendering/Render.h"

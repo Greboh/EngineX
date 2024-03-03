@@ -44,29 +44,44 @@ namespace EngineX
         return {ss[0].str(), ss[1].str()};
     }
 
-    Shader* Shader::Create(const std::string& vertexSource, const std::string& fragmentSource)
+    Ref<Shader> Shader::Create(const std::string& name, const std::string& shaderSource)
     {
         switch (Render::GetAPI())
         {
-        case RenderAPI::API::NONE: ENX_ENGINE_ASSERT(false, "RenderAPI::None is currently not supported!")
+            case RenderAPI::API::NONE: ENX_ENGINE_ASSERT(false, "RenderAPI::None is currently not supported!")
 
-        case RenderAPI::API::OPENGL: return new OpenGLShader(vertexSource, fragmentSource);
+            case RenderAPI::API::OPENGL: return CreateRef<OpenGLShader>(name, shaderSource);
         }
 
         ENX_ENGINE_ASSERT(false, "Unknown RenderAPI")
         return nullptr;
     }
 
-    Shader* Shader::Create(const std::string& shaderSource)
+    
+
+    void ShaderLibrary::Add(const Ref<Shader>& shader)
     {
-        switch (Render::GetAPI())
-        {
-        case RenderAPI::API::NONE: ENX_ENGINE_ASSERT(false, "RenderAPI::None is currently not supported!")
+        const auto& name = shader->GetName();
+        ENX_ENGINE_ASSERT(!Exists(name), "Shader already exists!");
 
-        case RenderAPI::API::OPENGL: return new OpenGLShader(shaderSource);
-        }
+        m_Library[name] = shader;
+    }
 
-        ENX_ENGINE_ASSERT(false, "Unknown RenderAPI")
-        return nullptr;
+    Ref<Shader> ShaderLibrary::Get(const std::string& nameOfShader)
+    {
+        ENX_ENGINE_ASSERT(m_Library.contains(nameOfShader), "Shader doesn't exist!");
+
+        return m_Library[nameOfShader];
+    }
+
+    void ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+    {
+        const auto shader = Shader::Create(name, filepath);
+        Add(shader);
+    }
+
+    bool ShaderLibrary::Exists(const std::string& nameOfShader) const
+    {
+        return m_Library.contains(nameOfShader);
     }
 }

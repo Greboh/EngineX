@@ -9,39 +9,7 @@
 
 namespace EngineX
 {
-    OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource)
-    {
-        // Create an empty vertex shader handle
-        uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-        // Create an empty fragment shader handle
-        uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-        // Send the vertex shader source code to GL
-        // Note that std::string's .c_str is NULL character terminated.
-        const GLchar* source = vertexSource.c_str();
-        glShaderSource(vertexShader, 1, &source, 0);
-
-        // Send the fragment shader source code to GL
-        // Note that std::string's .c_str is NULL character terminated.
-        source = fragmentSource.c_str();
-        glShaderSource(fragmentShader, 1, &source, 0);
-
-        Compile(vertexShader, fragmentShader);
-
-        // Vertex and fragment shaders are successfully compiled.
-        // Now time to link them together into a program.
-        // Get a program object.
-        m_RendererID = glCreateProgram();
-
-        Link(vertexShader, fragmentShader);
-
-        // Always detach shaders after a successful link.
-        glDetachShader(m_RendererID, vertexShader);
-        glDetachShader(m_RendererID, fragmentShader);
-    }
-
-    OpenGLShader::OpenGLShader(const std::string& shaderSource)
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& shaderSource)
     {
         const ShaderProgramSource programSource = ParseShader(shaderSource);
 
@@ -73,6 +41,8 @@ namespace EngineX
         // Always detach shaders after a successful link.
         glDetachShader(m_RendererID, vertexShader);
         glDetachShader(m_RendererID, fragmentShader);
+
+        m_Name = name;
     }
 
     OpenGLShader::~OpenGLShader()
@@ -89,7 +59,7 @@ namespace EngineX
     {
         glUseProgram(0);
     }
-
+    
     void OpenGLShader::UploadUniform(const std::string& name, const int& value)
     {
         const auto location = GetUniformLocation(name);

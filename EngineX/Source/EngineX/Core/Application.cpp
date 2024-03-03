@@ -1,8 +1,9 @@
 ﻿#include "enxpch.h"
+#include "GLFW/glfw3.h"
 
 #include "Application.h"
 #include "Timestep.h"
-#include "GLFW/glfw3.h"
+#include "EngineX/Rendering/Render.h"
 
 namespace EngineX
 {
@@ -26,6 +27,7 @@ namespace EngineX
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(ENX_BIND_EVENT_FN(OnWindowClose));
+        dispatcher.Dispatch<WindowResizeEvent>(ENX_BIND_EVENT_FN(OnWindowResize));
 
         // Handle events from the last index -> first index (See LayerStack.h for information!)
         for (auto iterator = m_Layerstack.end(); iterator != m_Layerstack.begin();)
@@ -51,13 +53,16 @@ namespace EngineX
             const float time = static_cast<float>(glfwGetTime());
             const Timestep deltaTime = time - m_LastTimeFrame;
             m_LastTimeFrame = time;
-            
-            // Update our layers from first index -> last index
-            for (Layer* layer : m_Layerstack)
-            {
-                layer->OnUpdate(deltaTime);
-            }
 
+            if (!m_Minimized)
+            {
+                // Update our layers from first index -> last index
+                for (Layer* layer : m_Layerstack)
+                {
+                    layer->OnUpdate(deltaTime);
+                }
+            }
+            
             m_ImGuiLayer->Begin();
             {
                 for (Layer* layer : m_Layerstack)
@@ -70,7 +75,7 @@ namespace EngineX
             m_Window->OnUpdate();
         }
 
-        ENX_ENGINE_TRACE("Shutting down ...");
+        ENX_ENGINE_WARN("Shutting down ...");
     }
 
     void Application::InsertLayer(Layer* layer)
@@ -90,5 +95,19 @@ namespace EngineX
         m_Running = false;
 
         return true;
+    }
+    bool Application::OnWindowResize(WindowResizeEvent& e)
+    {
+        if(e.GetWidth() == 0 || e.GetHeight() == 0)
+        {
+            m_Minimized = true;
+            return false;
+        }
+
+        m_Minimized = false;
+
+        Render::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+        return false;
     }
 }

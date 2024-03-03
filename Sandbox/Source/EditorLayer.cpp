@@ -112,7 +112,10 @@ void EditorLayer::OnAttach()
 
     m_UseVSync = EngineX::Application::GetInstance().GetWindow().IsVSync();
 
-    m_Shader.reset(EngineX::Shader::Create(std::string(ASSETS_DIR) + "Shaders/3DTextureShader.glsl"));
+
+    const auto shader = EngineX::Shader::Create("TextureShader", std::string(ASSETS_DIR) + "Shaders/3DTextureShader.glsl");
+    m_ShaderLibrary.Add(shader);
+    // m_TextureShader = ;
 
     m_Texture = EngineX::Texture2D::Create(std::string(ASSETS_DIR) + "Textures/Checkerboard.png");
 
@@ -141,15 +144,15 @@ void EditorLayer::OnUpdate(EngineX::Timestep deltaTime)
     
     EngineX::Render::BeginScene(m_Camera);
     {
-        m_Shader->Bind();
+        m_ShaderLibrary.Get("TextureShader")->Bind();
         m_Texture->Bind();
-        m_Shader->UploadUniform("u_Texture", 0);
-        m_Shader->UploadUniform("u_ExtraColor", m_ModelAdditionalColor);
+        m_ShaderLibrary.Get("TextureShader")->UploadUniform("u_Texture", 0);
+        m_ShaderLibrary.Get("TextureShader")->UploadUniform("u_ExtraColor", m_ModelAdditionalColor);
 
         // NOTE: Upload MVP uniform notice its ViewProjection * Model because matrices are multiple right to left!
-        m_Shader->UploadUniform("u_ModelViewProjection", m_Camera.GetViewProjection() * m_ModelTransform);
+        m_ShaderLibrary.Get("TextureShader")->UploadUniform("u_ModelViewProjection", m_Camera.GetViewProjection() * m_ModelTransform);
 
-        EngineX::Render::Submit(m_VertexArray, m_Shader);
+        EngineX::Render::Submit(m_VertexArray, m_ShaderLibrary.Get("TextureShader"));
     }
     EngineX::Render::EndScene();
     
@@ -635,4 +638,5 @@ void EditorLayer::ObjectManipulationPanel(bool* open)
 
 void EditorLayer::OnEvent(EngineX::Event& e)
 {
+    m_Camera.OnEvent(e);
 }
